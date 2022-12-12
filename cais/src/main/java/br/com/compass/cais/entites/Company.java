@@ -28,6 +28,6 @@ public class Company {
     private String name;
 
     @NotNull
-    @Column(name = "Origin")
+    @Column(name = "ORIGIN")
     private Origin origin;
 }
