@@ -1,4 +1,4 @@
-package br.com.compass.cais.dto.response;
+package br.com.compass.cais.services.dto.response;
 
 import br.com.compass.cais.enums.Origin;
 
