@@ -1,4 +1,4 @@
-package br.com.compass.cais.dto.request;
+package br.com.compass.cais.services.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
