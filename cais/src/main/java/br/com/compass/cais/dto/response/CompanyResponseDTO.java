@@ -2,7 +2,7 @@ package br.com.compass.cais.dto.response;
 
 import br.com.compass.cais.enums.Origin;
 
-public class PierResponseDTO {
+public class CompanyResponseDTO {
 
     private Long id;
 

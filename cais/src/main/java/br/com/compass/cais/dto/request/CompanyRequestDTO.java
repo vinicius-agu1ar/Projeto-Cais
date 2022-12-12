@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PierRequestDTO {
+public class CompanyRequestDTO {
 
     @NotBlank
     private String cnpj;
