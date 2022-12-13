@@ -40,7 +40,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyResponseDTO> findById(@PathVariable("id") Long id){
+    public ResponseEntity<CompanyResponseDTO> findBy(@PathVariable("id") Long id){
         Company company = service.fetchOrFail(id);
         CompanyResponseDTO companyResponseDTO = assembler.toModel(company);
         return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
