@@ -25,11 +25,8 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyRepository repository;
-
     private final CompanyService service;
-
     private final CompanyDTOAssembler assembler;
-
     private final CompanyInputDisassembler disassembler;
 
     @GetMapping
@@ -55,5 +52,17 @@ public class CompanyController {
 
         return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
     }
+    @PostMapping
+    public ResponseEntity<CompanyResponseDTO> create(@RequestBody @Valid CompanyRequestDTO request) {
+        Company company = disassembler.toDomainObject(request);
+        company = service.create(company);
+        CompanyResponseDTO response = assembler.toModel(company);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
+    @DeleteMapping ("/id")
+    public ResponseEntity<Void> delete (Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
