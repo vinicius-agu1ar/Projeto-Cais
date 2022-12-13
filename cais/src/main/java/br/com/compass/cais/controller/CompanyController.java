@@ -61,7 +61,8 @@ public class CompanyController {
     }
 
     @DeleteMapping ("/id")
-    public void delete (Long id){
+    public ResponseEntity<Void> delete (Long id){
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
