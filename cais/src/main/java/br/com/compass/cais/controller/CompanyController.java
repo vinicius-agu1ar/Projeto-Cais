@@ -8,6 +8,8 @@ import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
 import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +31,11 @@ public class CompanyController {
     private final CompanyDTOAssembler assembler;
     private final CompanyInputDisassembler disassembler;
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @GetMapping
     public Page<CompanyResponseDTO> findAll(Pageable pagination) {
+        log.info("Listando todas Companies");
         Page<Company> companies = repository.findAll(pagination);
         List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(companies.getContent());
         return new PageImpl<>(companyResponseDTOS, pagination, companies.getTotalElements());
@@ -38,6 +43,7 @@ public class CompanyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> findBy(@PathVariable("id") Long id){
+        log.info("Buscando Company por id");
         Company company = service.fetchOrFail(id);
         CompanyResponseDTO companyResponseDTO = assembler.toModel(company);
         return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
@@ -45,6 +51,7 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid CompanyRequestDTO request){
+        log.info("Atualizando Company por id");
         Company company = service.fetchOrFail(id);
         disassembler.copyToDomainObject(request,company);
         company = service.create(company);
