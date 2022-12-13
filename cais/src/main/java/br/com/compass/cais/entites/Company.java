@@ -28,6 +28,7 @@ public class Company {
     private String name;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "ORIGIN")
     private Origin origin;
 }
