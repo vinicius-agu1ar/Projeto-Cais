@@ -16,30 +16,48 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import javax.validation.Valid;
 import java.util.List;
 
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/company")
+@RequestMapping("/api/company")
 public class CompanyController {
 
     private final CompanyRepository repository;
     private final CompanyService companyService;
+
+    private final CompanyService service;
+
     private final CompanyDTOAssembler assembler;
     private final CompanyInputDisassembler disassembler;
     private final CompanyRepository companyRepository;
 
+    private final CompanyInputDisassembler disassembler;
+
     @GetMapping
-    public Page<CompanyResponseDTO> listCompanies(Pageable pagination) {
+    public Page<CompanyResponseDTO> findAll(Pageable pagination) {
         Page<Company> companies = repository.findAll(pagination);
         List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(companies.getContent());
-        Page<CompanyResponseDTO> pagesDTO = new PageImpl<>(companyResponseDTOS, pagination, companies.getTotalElements());
-        return pagesDTO;
+        return new PageImpl<>(companyResponseDTOS, pagination, companies.getTotalElements());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CompanyResponseDTO> findBy(@PathVariable("id") Long id){
+        Company company = service.fetchOrFail(id);
+        CompanyResponseDTO companyResponseDTO = assembler.toModel(company);
+        return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CompanyResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid CompanyRequestDTO request){
+        Company company = service.fetchOrFail(id);
+        disassembler.copyToDomainObject(request,company);
+        company = service.create(company);
+        CompanyResponseDTO companyResponseDTO = assembler.toModel(company);
+
+        return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
+    }
     @PostMapping
     public ResponseEntity<CompanyResponseDTO> create(@RequestBody @Valid CompanyRequestDTO request) {
         Company company = disassembler.toDomainObject(request);

@@ -3,7 +3,6 @@ package br.com.compass.cais.services;
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
 import br.com.compass.cais.repository.CompanyRepository;
-import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,17 +16,17 @@ public class CompanyService {
 
     private final CompanyRepository repository;
 
-    public Company buscarOuFalhar(Long companyId){
+    public Company fetchOrFail(Long companyId){
         return repository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
     }
 
     @Transactional
-    public Company adicionar(Company company){
-        return  repository.save(company);
+    public Company create(Company company){
+        return repository.save(company);
     }
 
     @Transactional
-    public void excluir(Long companyId){
+    public void delete(Long companyId){
         try{
             repository.deleteById(companyId);
             repository.flush();
