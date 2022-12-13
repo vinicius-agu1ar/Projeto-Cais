@@ -61,6 +61,7 @@ public class CompanyController {
     }
     @PostMapping
     public ResponseEntity<CompanyResponseDTO> create(@RequestBody @Valid CompanyRequestDTO request) {
+        log.info("Criando uma nova Company");
         Company company = disassembler.toDomainObject(request);
         company = service.create(company);
         CompanyResponseDTO response = assembler.toModel(company);
@@ -69,6 +70,7 @@ public class CompanyController {
 
     @DeleteMapping ("/id")
     public ResponseEntity<Void> delete (Long id){
+        log.info("Excluindo uma Company por Id");
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

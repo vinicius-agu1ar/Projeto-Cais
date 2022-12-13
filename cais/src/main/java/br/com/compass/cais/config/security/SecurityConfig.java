@@ -13,7 +13,7 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .antMatchers("/**").permitAll() //implementar camada de segurança para entidade company
+                .antMatchers("/**").permitAll() //implementar camada de segurança para entidade Company
                 .and()
                 .csrf().disable();
 
