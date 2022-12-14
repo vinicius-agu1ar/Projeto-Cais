@@ -42,7 +42,7 @@ public class CompanyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> findBy(@PathVariable("id") Long id){
-        log.info("Buscando Company por id");
+        log.info("Buscando Company por id...");
         Company company = service.fetchOrFail(id);
         CompanyResponseDTO companyResponseDTO = assembler.toModel(company);
         return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
@@ -50,7 +50,7 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid CompanyRequestDTO request){
-        log.info("Atualizando Company por id");
+        log.info("Atualizando Company por id...");
         Company company = service.fetchOrFail(id);
         disassembler.copyToDomainObject(request,company);
         company = service.create(company);
@@ -60,7 +60,7 @@ public class CompanyController {
     }
     @PostMapping
     public ResponseEntity<CompanyResponseDTO> create(@RequestBody @Valid CompanyRequestDTO request) {
-        log.info("Criando uma nova Company");
+        log.info("Criando uma nova Company...");
         Company company = disassembler.toDomainObject(request);
         company = service.create(company);
         CompanyResponseDTO response = assembler.toModel(company);
@@ -69,7 +69,7 @@ public class CompanyController {
 
     @DeleteMapping ("/id")
     public ResponseEntity<Void> delete (Long id){
-        log.info("Excluindo uma Company por Id");
+        log.info("Excluindo uma Company por Id...");
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
