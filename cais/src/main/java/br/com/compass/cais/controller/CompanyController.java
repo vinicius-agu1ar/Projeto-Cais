@@ -8,11 +8,11 @@ import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
 import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/company")
@@ -31,11 +32,9 @@ public class CompanyController {
     private final CompanyDTOAssembler assembler;
     private final CompanyInputDisassembler disassembler;
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
     @GetMapping
-    public Page<CompanyResponseDTO> findAll(Pageable pagination) {
-        log.info("Listando todas Companies");
+    public Page<CompanyResponseDTO> findAll(@PageableDefault(size = 10) Pageable pagination) {
+        log.info("Listando Companies com página de {} registros...", pagination.getPageSize());
         Page<Company> companies = repository.findAll(pagination);
         List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(companies.getContent());
         return new PageImpl<>(companyResponseDTOS, pagination, companies.getTotalElements());
