@@ -48,8 +48,8 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @DeleteMapping ("/id")
-    public ResponseEntity<Void> delete (Long id){
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<Void> delete (@PathVariable("id") Long id){
         log.info("Excluindo uma Company por Id...");
         service.delete(id);
         return ResponseEntity.noContent().build();

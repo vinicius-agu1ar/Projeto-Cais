@@ -63,7 +63,6 @@ class CompanyControllerTest {
     @Test
     void create() throws Exception {
         CompanyRequestDTO request = getCompanyRequestDTO();
-        CompanyResponseDTO companyResponseDTO = new CompanyResponseDTO();
         String input = TestUtils.mapToJson(request);
 
         MvcResult result = mvc
@@ -93,7 +92,6 @@ class CompanyControllerTest {
     @Test
     void update() throws Exception {
         CompanyRequestDTO request = getCompanyRequestDTO();
-        CompanyResponseDTO companyResponseDTO = new CompanyResponseDTO();
         String input = TestUtils.mapToJson(request);
 
         MvcResult result = mvc
@@ -107,18 +105,19 @@ class CompanyControllerTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-//    @Test
-//    void delete() throws Exception {
-//        MvcResult result = mvc
-//                .perform(MockMvcRequestBuilders.delete(ID_URL)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andReturn();
-//
-//        MockHttpServletResponse response = result.getResponse();
-//
-//        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-//    }
+
+    @Test
+    void delete() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.delete(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
 
     private CompanyRequestDTO getCompanyRequestDTO() {
         return CompanyRequestDTO.builder()
