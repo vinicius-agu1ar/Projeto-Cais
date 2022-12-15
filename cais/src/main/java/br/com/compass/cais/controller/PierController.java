@@ -2,6 +2,8 @@ package br.com.compass.cais.controller;
 
 import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.services.PierService;
+import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
+import br.com.compass.cais.services.dto.request.PierRequestDTO;
 import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
 import br.com.compass.cais.services.dto.response.PierResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,9 +27,37 @@ public class PierController {
     private final PierService service;
 
     @GetMapping
-    public ResponseEntity<Page<PierResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination) {
+    public ResponseEntity<List<PierResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination) {
         log.info("Listando Pier com página de {} registros...", pagination.getPageSize());
-        Page<PierResponseDTO> responsePage = service.findAll(pagination);
+        List<PierResponseDTO> responsePage = service.findAll(pagination).getContent();
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PierResponseDTO> findBy(@PathVariable("id") Long id){
+        log.info("Buscando Pier por id...");
+        PierResponseDTO pierResponseDTO = service.findBy(id);
+        return ResponseEntity.status(HttpStatus.OK).body(pierResponseDTO);
+    }
+
+    @PostMapping
+    public ResponseEntity<PierResponseDTO> create(@RequestBody @Valid PierRequestDTO request) {
+        log.info("Criando um novo Pier...");
+        PierResponseDTO response = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PierResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid PierRequestDTO request){
+        log.info("Atualizando Company por id...");
+        PierResponseDTO pierResponseDTO = service.update(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(pierResponseDTO);
+    }
+
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<Void> delete (@PathVariable("id") Long id){
+        log.info("Excluindo um Pier por Id...");
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

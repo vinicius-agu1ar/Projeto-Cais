@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -16,6 +17,6 @@ public class PierRequestDTO {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private Integer spots;
 }

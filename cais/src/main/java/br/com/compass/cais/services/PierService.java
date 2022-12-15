@@ -3,6 +3,7 @@ package br.com.compass.cais.services;
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.exceptions.PierNotFoundException;
+import br.com.compass.cais.exceptions.response.PierInUseException;
 import br.com.compass.cais.repository.PierRepository;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;
 import br.com.compass.cais.services.assembler.PierInputDisassembler;
@@ -43,6 +44,10 @@ public class PierService {
     @Transactional
     public PierResponseDTO create(PierRequestDTO request) {
         Pier pier = disassembler.toDomainObject(request);
+        Pier byName = repository.findByName(pier.getName());
+        if(byName.getName().equals(pier.getName())){
+            throw new PierInUseException();
+        }
         pier = create(pier);
         return assembler.toModel(pier);
     }
