@@ -4,10 +4,8 @@ import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -70,7 +70,7 @@ public class CompanyService {
         }
     }
 
-    public Company fetchOrFail(Long companyId){
+    private Company fetchOrFail(Long companyId){
         return repository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
     }
 
