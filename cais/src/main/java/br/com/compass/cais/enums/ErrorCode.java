@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
 
     COMPANY_NOT_FOUND("Company not found"),
+    PIER_NOT_FOUND("Pier not found"),
     BAD_REQUEST("Request invalid"),
     INVALID_PARAMETER("Invalid request parameter"),
     INTERNAL_SERVER_ERROR("Internal error has occurred."),

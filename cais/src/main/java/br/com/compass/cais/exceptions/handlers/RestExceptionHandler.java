@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.compass.cais.enums.ErrorCode;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.EntityInUseException;
+import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.exceptions.response.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -72,6 +73,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleCompanyNotFoundException(CompanyNotFoundException ex) {
         log.error(ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_NOT_FOUND, ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(PierNotFoundException.class)
+    public final ResponseEntity<Object> handlePierNotFoundException(PierNotFoundException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_NOT_FOUND, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
