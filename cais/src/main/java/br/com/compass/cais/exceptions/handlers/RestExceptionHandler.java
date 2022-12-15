@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.com.compass.cais.enums.ErrorCode;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
+import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.exceptions.response.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -74,8 +75,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> EntityInUseException(Exception ex){
+    @ExceptionHandler(EntityInUseException.class)
+    public final ResponseEntity<Object> EntityInUseException(EntityInUseException ex){
         log.error(ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_IS_IN_USE, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
