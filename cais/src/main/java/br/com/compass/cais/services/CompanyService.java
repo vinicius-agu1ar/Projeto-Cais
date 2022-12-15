@@ -29,8 +29,6 @@ public class CompanyService {
 
     private final CompanyInputDisassembler disassembler;
 
-    private static final String MSG_COMPANY_IS_IN_USE = "Company code %d cannot be removed as it is in use";
-
     public Page<CompanyResponseDTO> findAll(Pageable pageable) {
         Page<Company> pageCompanies = repository.findAll(pageable);
         List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(pageCompanies.getContent());
@@ -68,7 +66,7 @@ public class CompanyService {
         }catch (EmptyResultDataAccessException e) {
             throw new CompanyNotFoundException();
         }catch (DataIntegrityViolationException e) { //erro se tentar excluir uma company que está em uso
-            throw new EntityInUseException(String.format(MSG_COMPANY_IS_IN_USE, companyId));
+            throw new EntityInUseException();
         }
     }
 
