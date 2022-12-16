@@ -12,6 +12,7 @@ public enum ErrorCode {
     BAD_REQUEST("Request invalid"),
     INVALID_PARAMETER("Invalid request parameter"),
     INTERNAL_SERVER_ERROR("Internal error has occurred."),
+    ENTITY_IS_IN_USE("Entity is in use, please check before performing this action again"),
     COMPANY_IS_IN_USE ("Company cannot be removed as it is in use"),
     PIER_IS_IN_USE ("Pier is in use, please check before performing this action again");
 

@@ -1,4 +1,4 @@
-package br.com.compass.cais.exceptions.response;
+package br.com.compass.cais.exceptions;
 
 import br.com.compass.cais.enums.ErrorCode;
 import lombok.Getter;
