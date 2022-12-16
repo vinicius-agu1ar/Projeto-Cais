@@ -1,14 +1,10 @@
 package br.com.compass.cais.controller;
 
-import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.services.PierService;
-import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
 import br.com.compass.cais.services.dto.response.PierResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
