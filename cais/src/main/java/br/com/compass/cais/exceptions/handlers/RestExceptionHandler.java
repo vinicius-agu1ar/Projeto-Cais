@@ -6,7 +6,9 @@ import java.util.List;
 import br.com.compass.cais.enums.ErrorCode;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.EntityInUseException;
+import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.exceptions.response.ExceptionResponse;
+import br.com.compass.cais.exceptions.response.PierInUseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -75,11 +77,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
+    @ExceptionHandler(PierNotFoundException.class)
+    public final ResponseEntity<Object> handlePierNotFoundException(PierNotFoundException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_NOT_FOUND, ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
     @ExceptionHandler(EntityInUseException.class)
     public final ResponseEntity<Object> handleEntityInUseException(Exception ex){
         log.error(ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_IS_IN_USE, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(PierInUseException.class)
+    public final ResponseEntity<Object> handlePierInUseException(PierInUseException ex){
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_IS_IN_USE, ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,6 +1,7 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
+import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.repository.CompanyRepository;
@@ -72,6 +73,17 @@ public class CompanyService {
 
     private Company fetchOrFail(Long companyId){
         return repository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
+    }
+
+    public Page<CompanyResponseDTO> verifyCompanyResponseDTO(Origin origin, Pageable pageable) {
+        if(origin == null){
+            return findAll(pageable);
+        }else{
+            List<Company> companies = repository.findByOrigin(origin, pageable).getContent();
+            List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(companies);
+
+            return new PageImpl<>(companyResponseDTOS, pageable, companies.size());
+        }
     }
 
 }
