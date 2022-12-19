@@ -81,6 +81,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
+    @ExceptionHandler(ShipNotFoundException.class)
+    public final ResponseEntity<Object> handleShipNotFoundException(ShipNotFoundException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_NOT_FOUND, ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
     @ExceptionHandler(EntityInUseException.class)
     public final ResponseEntity<Object> handleEntityInUseException(Exception ex){
         log.error(ex.getMessage());
