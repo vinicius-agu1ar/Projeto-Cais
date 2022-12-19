@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -18,18 +16,17 @@ public class Ship {
     @Column(name = "ID")
     private Long id;
 
-    @NotBlank
     @Column(name = "NAME")
     private String name;
 
-    @NotBlank
     @Column(name = "WEIGHT")
     private Double weight;
 
     @OneToOne
-    @NotNull
+    @JoinColumn(name = "COMPANY_ID", nullable = false)
     private Company companyId;
 
     @OneToOne
+    @JoinColumn(name = "PIER_ID")
     private Pier pierId;
 }
