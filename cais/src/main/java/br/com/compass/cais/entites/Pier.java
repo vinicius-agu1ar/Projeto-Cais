@@ -1,6 +1,5 @@
 package br.com.compass.cais.entites;
 
-import br.com.compass.cais.enums.Origin;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,8 +10,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "COMPANY")
-public class Company {
+@Table(name = "PIER")
+public class Pier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +19,10 @@ public class Company {
     private Long id;
 
     @NotBlank
-    @Column(name = "CNPJ")
-    private String cnpj;
-
-    @NotBlank
     @Column(name = "NAME")
     private String name;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "ORIGIN")
-    private Origin origin;
+    @Column(name = "SPOTS")
+    private Integer spots ;
 }
