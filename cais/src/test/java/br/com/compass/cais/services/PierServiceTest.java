@@ -31,7 +31,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class PierServiceTest {
+class PierServiceTest {
 
     static final Long ID = 1L;
     @InjectMocks

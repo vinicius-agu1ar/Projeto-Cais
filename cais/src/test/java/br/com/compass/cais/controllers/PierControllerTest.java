@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = PierController.class)
 @AutoConfigureMockMvc(addFilters = false) // ignorando a camada do security
-public class PierControllerTest {
+class PierControllerTest {
 
     public static final String BASE_URL = "/api/pier";
     public static final String ID_URL = BASE_URL + "/1";
