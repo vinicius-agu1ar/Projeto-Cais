@@ -8,6 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ShipResponseDTO {
+
+    private Long id;
+
     private String name;
 
     private Double weight;

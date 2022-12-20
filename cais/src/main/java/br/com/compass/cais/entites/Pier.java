@@ -18,11 +18,11 @@ public class Pier {
     @Column(name = "ID")
     private Long id;
 
-    @NotBlank
+//    @NotBlank
     @Column(name = "NAME")
     private String name;
 
-    @NotNull
+//    @NotNull
     @Column(name = "SPOTS")
     private Integer spots ;
 }
