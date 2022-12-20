@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class ComapanyDTOAssembler {
+public class CompanyDTOAssembler {
 
     private final ModelMapper modelMapper;
 
@@ -21,8 +21,7 @@ public class ComapanyDTOAssembler {
 
     public List<CompanyResponseDTO> toCollectionModel(List<Company> companies){
         return companies.stream()
-                .map(company -> toModel(company))
+                .map(this::toModel)
                 .collect(Collectors.toList());
-
     }
 }

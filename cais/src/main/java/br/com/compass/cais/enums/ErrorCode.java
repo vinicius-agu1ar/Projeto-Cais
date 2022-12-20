@@ -7,10 +7,16 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    COMPANY_NOT_FOUND("Company not found"),
+    COMPANY_NOT_FOUND("Company not found, check before making this request again"),
+    PIER_NOT_FOUND("Pier not found, check before making this request again"),
+
+    SHIP_NOT_FOUND("Ship not found, check before making this request again"),
     BAD_REQUEST("Request invalid"),
     INVALID_PARAMETER("Invalid request parameter"),
-    INTERNAL_SERVER_ERROR("Internal error has occurred.");
+    INTERNAL_SERVER_ERROR("Internal error has occurred."),
+    ENTITY_IS_IN_USE("Entity is in use, please check before performing this action again"),
+    COMPANY_IS_IN_USE ("Company cannot be removed as it is in use"),
+    PIER_IS_IN_USE ("Pier is in use, please check before performing this action again");
 
     private final String message;
 }

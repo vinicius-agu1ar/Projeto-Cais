@@ -1,4 +1,4 @@
-package br.com.compass.cais.config;
+package br.com.compass.cais.config.modelmapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
