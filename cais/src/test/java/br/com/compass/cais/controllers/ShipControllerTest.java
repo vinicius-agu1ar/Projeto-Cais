@@ -3,7 +3,6 @@ package br.com.compass.cais.controllers;
 import br.com.compass.cais.controller.ShipController;
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Pier;
-import br.com.compass.cais.repository.CompanyRepository;
 import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.ShipService;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
@@ -11,7 +10,6 @@ import br.com.compass.cais.services.assembler.ShipInputDisassembler;
 import br.com.compass.cais.services.dto.request.ShipRequestDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,8 +41,6 @@ class ShipControllerTest {
     private ShipInputDisassembler disassembler;
     @Autowired
     private MockMvc mvc;
-    @Autowired
-    private CompanyRepository companyRepository;
 
 
     @Test
@@ -94,27 +90,12 @@ class ShipControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    private Company criarCompany(){
-
-        Company company = new Company();
-        company.setId(10L);
-        return company;
-
-
-
-    }
-    private Pier criarPier(){
-        Pier pier = new Pier();
-        pier.setId(1L);
-        return pier;
-    }
-
     private ShipRequestDTO getShipRequestDTO() {
         return ShipRequestDTO.builder()
                 .name("Test")
-                .weight(10000.0)
-                .companyId(criarCompany())
-                .pierId(criarPier())
+                .weight(10000.0D)
+                .companyId(new Company())
+                .pierId(new Pier())
                 .build();
     }
 }
