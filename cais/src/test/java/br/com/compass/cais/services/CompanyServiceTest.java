@@ -1,13 +1,17 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.repository.CompanyRepository;
+import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
 import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
+import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResumeResponseDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +31,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +43,12 @@ class CompanyServiceTest {
 
     @Mock
     private CompanyRepository repository;
+
+    @Mock
+    private ShipRepository repositoryShip;
+
+    @Mock
+    private ShipDTOAssembler shipAssembler;
 
     @Mock
     private CompanyDTOAssembler assembler;
@@ -62,6 +71,21 @@ class CompanyServiceTest {
 
         Assertions.assertEquals(response.getName(), companyResponseDTO.getName());
         Assertions.assertEquals(response, companyResponseDTO);
+    }
+
+    @Test
+    void shouldFindAllShipsInCompanies_success() {
+        List<ShipResumeResponseDTO> ships = Arrays.asList(new ShipResumeResponseDTO());
+        List<Ship> companyShips = Arrays.asList(new Ship());
+        Company company = new Company();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(repositoryShip.findByCompanyId(any())).thenReturn(companyShips);
+        Mockito.when(shipAssembler.toCollectionModelResume(companyShips)).thenReturn(ships);
+
+        List<ShipResumeResponseDTO> all = service.findAll(ID);
+
+        Assertions.assertEquals(ships, all);
     }
 
     @Test

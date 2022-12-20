@@ -24,9 +24,9 @@ public class Ship {
 
     @OneToOne
     @JoinColumn(name = "COMPANY_ID", nullable = false)
-    private Company companyId;
+    private Company company;
 
     @OneToOne
     @JoinColumn(name = "PIER_ID")
-    private Pier pierId;
+    private Pier pier;
 }

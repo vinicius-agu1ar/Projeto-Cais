@@ -2,7 +2,7 @@ package br.com.compass.cais.controller;
 
 import br.com.compass.cais.services.PierService;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

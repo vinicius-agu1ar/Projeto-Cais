@@ -3,10 +3,10 @@ package br.com.compass.cais.controller;
 import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.services.CompanyService;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Slf4j
@@ -36,6 +37,13 @@ public class CompanyController {
         log.info("Buscando Company por id...");
         CompanyResponseDTO companyResponseDTO = service.findBy(id);
         return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
+    }
+
+    @GetMapping("/{id}/ships")
+    public ResponseEntity<List<ShipResumeResponseDTO>> findAllShips(@PathVariable("id") Long id){
+        log.info("Listando Ships de uma determinada Company...");
+        List<ShipResumeResponseDTO> shipsResumeResponseDTO = service.findAll(id);
+        return ResponseEntity.status(HttpStatus.OK).body(shipsResumeResponseDTO);
     }
 
     @PutMapping("/{id}")

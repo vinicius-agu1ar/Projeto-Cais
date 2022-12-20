@@ -2,6 +2,9 @@ package br.com.compass.cais.services.dto.request;
 
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Pier;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +26,9 @@ public class ShipRequestDTO {
     private Double weight;
 
     @NotNull
-    private Company companyId;
+    private CompanyResponseDTO company;
 
     @NotNull
-    private Pier pierId;
+    private PierResponseDTO pier;
 
 }

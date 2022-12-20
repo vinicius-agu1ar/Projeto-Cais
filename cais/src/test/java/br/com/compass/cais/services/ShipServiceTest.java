@@ -5,7 +5,7 @@ import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.assembler.ShipInputDisassembler;
 import br.com.compass.cais.services.dto.request.ShipRequestDTO;
-import br.com.compass.cais.services.dto.response.ShipResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
