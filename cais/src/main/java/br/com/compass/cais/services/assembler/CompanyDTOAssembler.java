@@ -1,7 +1,7 @@
 package br.com.compass.cais.services.assembler;
 
 import br.com.compass.cais.entites.Company;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

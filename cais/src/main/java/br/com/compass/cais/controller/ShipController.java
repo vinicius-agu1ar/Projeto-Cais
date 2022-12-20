@@ -2,7 +2,7 @@ package br.com.compass.cais.controller;
 
 import br.com.compass.cais.services.ShipService;
 import br.com.compass.cais.services.dto.request.ShipRequestDTO;
-import br.com.compass.cais.services.dto.response.ShipResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +32,7 @@ public class ShipController {
 
     @GetMapping
     public ResponseEntity<List<ShipResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination){
-        log.info("Listando Navios com página de {} registros...", pagination.getPageSize());
+        log.info("Listando Ships com página de {} registros...", pagination.getPageSize());
         List<ShipResponseDTO> responsePage = service.findAll(pagination).getContent();
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
 
@@ -40,14 +40,14 @@ public class ShipController {
 
     @PostMapping
     public ResponseEntity<ShipResponseDTO> create(@RequestBody @Valid ShipRequestDTO request) {
-        log.info("Cadastrando um novo navio...");
+        log.info("Cadastrando um novo Ship...");
         ShipResponseDTO response = service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ShipResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid ShipRequestDTO request){
-        log.info("Atualizando navio por id...");
+        log.info("Atualizando Ship por id...");
         ShipResponseDTO shipResponseDTO = service.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(shipResponseDTO);
     }
