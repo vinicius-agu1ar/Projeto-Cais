@@ -1,13 +1,16 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Pier;
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.repository.PierRepository;
+import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;
 import br.com.compass.cais.services.assembler.PierInputDisassembler;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
 import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +29,8 @@ import java.util.List;
 public class PierService {
 
     private final PierRepository repository;
+    
+    private final ShipService shipService;
 
     private final PierDTOAssembler assembler;
 
@@ -42,6 +47,14 @@ public class PierService {
         log.info("Chamando método findBy - Service Pier");
         Pier pier = fetchOrFail(id);
         return assembler.toModel(pier);
+    }
+
+    @Transactional
+    public void bind(Long id, Long shipId){
+        log.info("Chamando método bind - Service Pier");
+        Pier pier = fetchOrFail(id);
+        Ship ship = shipService.fetchOrFail(shipId);
+        ship.setPier(pier);
     }
 
     @Transactional

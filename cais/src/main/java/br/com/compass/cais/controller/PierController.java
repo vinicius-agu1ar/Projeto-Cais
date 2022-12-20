@@ -43,6 +43,13 @@ public class PierController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/{id}/ship/{shipId}")
+    public ResponseEntity<Void> bindPierShip(@PathVariable("id") Long id, @PathVariable("shipId") Long shipId) {
+        log.info("Vinculando um Pier a um Ship...");
+        service.bind(id,shipId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PierResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid PierRequestDTO request){
         log.info("Atualizando Company por id...");
@@ -56,4 +63,5 @@ public class PierController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

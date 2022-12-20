@@ -122,6 +122,20 @@ class PierControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
+
+    @Test
+    void bindPierShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
     private PierRequestDTO getPierRequestDTO() {
         return PierRequestDTO.builder()
                 .name("Test")
