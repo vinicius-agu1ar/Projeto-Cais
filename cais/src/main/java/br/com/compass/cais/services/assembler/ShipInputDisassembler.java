@@ -17,4 +17,7 @@ public class ShipInputDisassembler {
 
         return modelMapper.map(shipRequestDTO, Ship.class);
     }
+    public void copyToDomainObject(ShipRequestDTO shipRequestDTO, Ship ship){
+        modelMapper.map(shipRequestDTO, ship);
+    }
 }
