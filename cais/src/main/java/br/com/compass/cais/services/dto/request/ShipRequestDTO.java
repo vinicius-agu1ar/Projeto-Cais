@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -20,10 +21,10 @@ public class ShipRequestDTO {
     @NotBlank
     private Double weight;
 
-    @NotBlank
+    @NotNull
     private Company companyId;
 
-    @NotBlank
+    @NotNull
     private Pier pierId;
 
 }

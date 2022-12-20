@@ -1,13 +1,15 @@
 package br.com.compass.cais.controller;
 
 import br.com.compass.cais.services.ShipService;
+import br.com.compass.cais.services.dto.request.ShipRequestDTO;
+import br.com.compass.cais.services.dto.response.ShipResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -22,5 +24,19 @@ public class ShipController {
         log.info("Excluindo um Ship por Id...");
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<ShipResponseDTO> create(@RequestBody @Valid ShipRequestDTO request) {
+        log.info("Cadastrando um novo navio...");
+        ShipResponseDTO response = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ShipResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid ShipRequestDTO request){
+        log.info("Atualizando navio por id...");
+        ShipResponseDTO shipResponseDTO = service.update(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(shipResponseDTO);
     }
 }
