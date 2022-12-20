@@ -8,8 +8,6 @@ import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.assembler.ShipInputDisassembler;
 import br.com.compass.cais.services.dto.request.ShipRequestDTO;
 import br.com.compass.cais.services.dto.response.ShipResponseDTO;
-import br.com.compass.cais.services.dto.response.ShipResponseDTO;
-import org.springframework.data.domain.Slice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;

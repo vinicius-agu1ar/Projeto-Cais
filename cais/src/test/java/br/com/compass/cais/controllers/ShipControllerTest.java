@@ -3,7 +3,6 @@ package br.com.compass.cais.controllers;
 import br.com.compass.cais.controller.ShipController;
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Pier;
-import br.com.compass.cais.repository.CompanyRepository;
 import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.ShipService;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
