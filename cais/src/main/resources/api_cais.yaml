@@ -1,0 +1,155 @@
+openapi: 3.0.1
+info: 
+  title: API Cais
+  description: Projeto de API para gerenciamento de um cais.
+  version: 0.0.1
+  termsOfService: https://github.com/vinicius-agu1ar/Projeto-Cais/blob/dev/README.md
+  contact:
+    name: Lucas, Nalbert e Vinicius
+    url: https://github.com/vinicius-agu1ar/Projeto-Cais
+  license:
+    name: GPLv3
+    url: https://gnu.org/licenses/gpl-3.0.html
+servers: 
+  - url: http://localhost:{port}
+    description: API do cais
+    variables:
+      port:
+        default: '8080'
+paths:
+  /api/pier:
+    post:
+      tags:
+        - Pier
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PierRequestDTO'
+        required: true
+      responses:
+        '201':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+    get:
+      tags:
+        - Pier
+      operationId: findAll
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseParameters'
+  /api/pier/{id}:
+    get:
+      tags:
+        - Pier
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+    put:
+      tags:
+        - Pier
+      operationId: update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PierRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+    delete:
+      tags:
+        - Pier
+      operationId: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: NO CONTENT
+components:
+  schemas:
+    PierRequestDTO:
+      required:
+        - name
+        - spots
+      type: object
+      properties:
+        name:
+          type: string
+        spots:
+          type: integer
+    PierResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        spots:
+          type: integer
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+        size:
+          minimum: 1
+          type: integer
+        sort:
+          type: array
+          items:
+            type: string
+    PierResponseParameters:
+      type: object
+      properties:
+        Pier:
+          type: array
+          items:
+            $ref: '#/components/schemas/PierResponseDTO'
+        numberOfElements:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
