@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShipRequestDTO {
+
     @NotBlank
     private String name;
 
