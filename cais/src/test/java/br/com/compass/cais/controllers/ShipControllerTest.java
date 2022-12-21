@@ -110,6 +110,18 @@ class ShipControllerTest {
         MockHttpServletResponse resposta = result.getResponse();
         assertEquals(HttpStatus.OK.value(), resposta.getStatus());
     }
+    @Test
+    void findById() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 
     private ShipRequestDTO getShipRequestDTO() {
         return ShipRequestDTO.builder()
