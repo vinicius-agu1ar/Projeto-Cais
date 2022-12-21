@@ -6,7 +6,7 @@ import br.com.compass.cais.services.PierService;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;
 import br.com.compass.cais.services.assembler.PierInputDisassembler;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,7 @@ class PierControllerTest {
 
     public static final String BASE_URL = "/api/pier";
     public static final String ID_URL = BASE_URL + "/1";
+    public static final String ID_URL_BIND = ID_URL + "/ship/1";
     public static final Long ID = 1L;
 
     @MockBean
@@ -122,6 +123,20 @@ class PierControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
+
+    @Test
+    void bindPierShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
     private PierRequestDTO getPierRequestDTO() {
         return PierRequestDTO.builder()
                 .name("Test")

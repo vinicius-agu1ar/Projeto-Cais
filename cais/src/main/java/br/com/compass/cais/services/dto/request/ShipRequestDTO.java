@@ -1,29 +1,31 @@
 package br.com.compass.cais.services.dto.request;
 
-import br.com.compass.cais.entites.Company;
-import br.com.compass.cais.entites.Pier;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShipRequestDTO {
+
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private Double weight;
 
-    @NotBlank
-    private Company companyId;
+    @NotNull
+    private CompanyResponseDTO company;
 
-    @NotBlank
-    private Pier pierId;
+    @NotNull
+    private PierResponseDTO pier;
 
 }

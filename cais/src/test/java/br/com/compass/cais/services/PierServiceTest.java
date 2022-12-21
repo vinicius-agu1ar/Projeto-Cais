@@ -1,13 +1,14 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Pier;
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.repository.PierRepository;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;
 import br.com.compass.cais.services.assembler.PierInputDisassembler;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +28,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PierServiceTest {
@@ -42,6 +42,8 @@ class PierServiceTest {
     private PierDTOAssembler assembler;
     @Mock
     private PierInputDisassembler disassembler;
+    @Mock
+    private ShipService shipService;
     @Mock
     private Pageable pageable;
 
@@ -75,6 +77,14 @@ class PierServiceTest {
     }
 
     @Test
+    void shouldCreatePier_error() {
+        Pier pier = new Pier();
+
+        doThrow(new DataIntegrityViolationException("test")).when(repository).save(any());
+        Assertions.assertThrows(EntityInUseException.class, () -> service.create(pier));
+    }
+
+    @Test
     void shouldUpdatePier_success() {
         Pier pier = new Pier();
         PierRequestDTO request = new PierRequestDTO();
@@ -87,6 +97,7 @@ class PierServiceTest {
         PierResponseDTO pierResponseDTO = service.update(ID,request);
         assertEquals(response, pierResponseDTO);
         verify(repository).save(any());
+
     }
 
     @Test
@@ -94,6 +105,18 @@ class PierServiceTest {
         service.delete(ID);
         verify(repository).deleteById(any());
     }
+
+//    @Test
+//    void shouldBind_success() {
+//        Pier pier = new Pier();
+//        Ship ship = new Ship();
+//
+//        Mockito.when(repository.findById(any())).thenReturn(Optional.of(pier));
+//        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+//        service.bind(pier.getId(), ship.getId());
+//
+//        assertEquals(pier.getClass(), ship.getPier().getClass());
+//    }
 
     @Test
     void shouldDeletePier_error() {

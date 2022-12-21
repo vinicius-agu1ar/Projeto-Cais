@@ -1,5 +1,6 @@
 package br.com.compass.cais.enums;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +17,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("Internal error has occurred."),
     ENTITY_IS_IN_USE("Entity is in use, please check before performing this action again"),
     COMPANY_IS_IN_USE ("Company cannot be removed as it is in use"),
-    PIER_IS_IN_USE ("Pier is in use, please check before performing this action again");
+    PIER_IS_IN_USE ("Pier is in use, please check before performing this action again"),
+    PIER_FULL("Pier is full, try to change the pier");
 
     private final String message;
 }

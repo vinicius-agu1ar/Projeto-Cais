@@ -1,13 +1,15 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Pier;
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.EntityInUseException;
+import br.com.compass.cais.exceptions.PierFullException;
 import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.repository.PierRepository;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;
 import br.com.compass.cais.services.assembler.PierInputDisassembler;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +29,8 @@ public class PierService {
 
     private final PierRepository repository;
 
+    private final ShipService shipService;
+
     private final PierDTOAssembler assembler;
 
     private final PierInputDisassembler disassembler;
@@ -44,6 +48,22 @@ public class PierService {
         return assembler.toModel(pier);
     }
 
+    @Transactional //conversar com o mateus
+    public void bind(Long id, Long shipId) {
+        log.info("Chamando método bind - Service Pier");
+
+        Pier pier = fetchOrFail(id);
+
+        if (pier.getSpots() < 1) {
+            throw new PierFullException();
+        }
+
+        Ship ship = shipService.fetchOrFail(shipId);
+        ship.setPier(pier);
+        int subtract = pier.getSpots() - 1;
+        pier.setSpots(subtract);
+    }
+
     @Transactional
     public PierResponseDTO create(PierRequestDTO request) {
         log.info("Chamando método create - Service Pier");
@@ -56,35 +76,35 @@ public class PierService {
     public PierResponseDTO update(Long id, PierRequestDTO request) {
         log.info("Chamando método update - Service Pier");
         Pier pier = fetchOrFail(id);
-        disassembler.copyToDomainObject(request,pier);
+        disassembler.copyToDomainObject(request, pier);
         pier = create(pier);
         return assembler.toModel(pier);
     }
 
     @Transactional
-    public void delete(Long pierId){
+    public void delete(Long pierId) {
         log.info("Chamando método delete - Service Pier");
-        try{
+        try {
             repository.deleteById(pierId);
             repository.flush();
-        }catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new PierNotFoundException();
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException();
         }
     }
 
-    public Pier create(Pier pier){
+    public Pier create(Pier pier) {
         log.info("Chamando método create (salvando no repository) - Service Pier");
-        try{
+        try {
             return repository.save(pier);
-        }catch(DataIntegrityViolationException ex){
+        } catch (DataIntegrityViolationException ex) {
             throw new EntityInUseException();
         }
     }
 
 
-    private Pier fetchOrFail(Long pierId){
+    private Pier fetchOrFail(Long pierId) {
         log.info("Chamando método fetchOrFail - Service Pier");
         return repository.findById(pierId).orElseThrow(PierNotFoundException::new);
     }

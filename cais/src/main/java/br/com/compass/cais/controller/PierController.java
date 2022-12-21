@@ -2,7 +2,7 @@ package br.com.compass.cais.controller;
 
 import br.com.compass.cais.services.PierService;
 import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +43,13 @@ public class PierController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/{id}/ship/{shipId}")
+    public ResponseEntity<Void> bindPierShip(@PathVariable("id") Long id, @PathVariable("shipId") Long shipId) {
+        log.info("Vinculando um Pier a um Ship...");
+        service.bind(id,shipId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PierResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid PierRequestDTO request){
         log.info("Atualizando Company por id...");
@@ -56,4 +63,5 @@ public class PierController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }
