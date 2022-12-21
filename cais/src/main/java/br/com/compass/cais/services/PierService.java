@@ -65,6 +65,13 @@ public class PierService {
     }
 
     @Transactional
+    public void unlink(Long id) {
+        log.info("Chamando método unlink - Service Pier");
+        Ship ship = shipService.fetchOrFail(id);
+        ship.setPier(null);
+    }
+
+    @Transactional
     public PierResponseDTO create(PierRequestDTO request) {
         log.info("Chamando método create - Service Pier");
         Pier pier = disassembler.toDomainObject(request);

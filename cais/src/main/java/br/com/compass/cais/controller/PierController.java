@@ -50,6 +50,13 @@ public class PierController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("/ship/{id}")
+    public ResponseEntity<Void> unlinkPierShip(@PathVariable("id") Long id) {
+        log.info("desvinculando um Pier a um Ship...");
+        service.unlink(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PierResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid PierRequestDTO request){
         log.info("Atualizando Company por id...");
