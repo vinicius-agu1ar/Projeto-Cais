@@ -48,6 +48,9 @@ class CompanyServiceTest {
     private ShipRepository repositoryShip;
 
     @Mock
+    private ShipService shipService;
+
+    @Mock
     private ShipDTOAssembler shipAssembler;
 
     @Mock
@@ -148,5 +151,27 @@ class CompanyServiceTest {
         Page<CompanyResponseDTO> all = service.findAll(pageable);
 
         Assertions.assertEquals(companyResponseDTOPage, all);
+    }
+
+    @Test
+    void shouldBind_success() {
+        Company company = new Company();
+        Ship ship = new Ship();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.bind(ID, ID);
+
+        assertEquals(company.getClass(), ship.getCompany().getClass());
+    }
+
+    @Test
+    void shouldUnlink_success() {
+        Ship ship = new Ship();
+
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.unlink(ship.getId());
+
+        assertEquals(null, ship.getCompany());
     }
 }

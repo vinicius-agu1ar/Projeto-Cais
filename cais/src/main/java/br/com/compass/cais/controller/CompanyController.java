@@ -53,6 +53,13 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("/ship/{id}")
+    public ResponseEntity<Void> unlinkCompanyShip(@PathVariable("id") Long id) {
+        log.info("Desvinculando um Company a um Ship...");
+        service.unlink(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid CompanyRequestDTO request){
         log.info("Atualizando Company por id...");

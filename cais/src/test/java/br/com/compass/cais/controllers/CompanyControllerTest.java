@@ -38,6 +38,7 @@ class CompanyControllerTest {
     public static final String ID_URL = BASE_URL + "/1";
     public static final String ID_URL_SHIPS = ID_URL + "/ships";
     public static final String ID_URL_BIND = ID_URL + "/ship/1";
+    public static final String ID_URL_UNLINK = BASE_URL + "/ship/1";
     public static final Long ID = 1L;
 
     @MockBean
@@ -98,6 +99,19 @@ class CompanyControllerTest {
     void bindCompanyShip() throws Exception {
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void unlinkCompanyShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_UNLINK)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();

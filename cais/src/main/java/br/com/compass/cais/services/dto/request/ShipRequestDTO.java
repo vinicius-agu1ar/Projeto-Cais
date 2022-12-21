@@ -1,7 +1,5 @@
 package br.com.compass.cais.services.dto.request;
 
-import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
-import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +19,5 @@ public class ShipRequestDTO {
 
     @NotNull
     private Double weight;
-
-    private CompanyResponseDTO company;
-
-    private PierResponseDTO pier;
 
 }
