@@ -23,7 +23,7 @@ public class Ship {
     private Double weight;
 
     @OneToOne
-    @JoinColumn(name = "COMPANY_ID", nullable = false)
+    @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
     @OneToOne

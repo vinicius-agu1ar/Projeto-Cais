@@ -46,6 +46,13 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(shipsResumeResponseDTO);
     }
 
+    @PostMapping("/{id}/ship/{companyId}")
+    public ResponseEntity<Void> bindCompanyShip(@PathVariable("id") Long id, @PathVariable("companyId") Long companyId) {
+        log.info("Vinculando uma Company a um Ship...");
+        service.bind(id,companyId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid CompanyRequestDTO request){
         log.info("Atualizando Company por id...");

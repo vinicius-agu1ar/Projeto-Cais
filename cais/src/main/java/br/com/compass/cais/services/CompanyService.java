@@ -34,6 +34,8 @@ public class CompanyService {
 
     private final ShipRepository repositoryShip;
 
+    private final ShipService shipService;
+
     private final CompanyDTOAssembler assembler;
 
     private final ShipDTOAssembler shipAssembler;
@@ -81,6 +83,13 @@ public class CompanyService {
         return repository.save(company);
     }
 
+    @Transactional
+    public void bind(Long id, Long shipId) {
+        log.info("Chamando método bind - Service Company");
+        Company company = fetchOrFail(id);
+        Ship ship = shipService.fetchOrFail(shipId);
+        ship.setCompany(company);
+    }
     @Transactional
     public void delete(Long companyId){
         log.info("Chamando método delete (excluindo no repository) - Service Company");

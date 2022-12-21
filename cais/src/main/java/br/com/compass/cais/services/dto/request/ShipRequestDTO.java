@@ -22,10 +22,8 @@ public class ShipRequestDTO {
     @NotNull
     private Double weight;
 
-    @NotNull
     private CompanyResponseDTO company;
 
-    @NotNull
     private PierResponseDTO pier;
 
 }

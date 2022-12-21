@@ -8,7 +8,6 @@ import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
 import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
 import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
-import br.com.compass.cais.services.dto.response.ship.ShipResumeResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ class CompanyControllerTest {
     public static final String BASE_URL = "/api/company";
     public static final String ID_URL = BASE_URL + "/1";
     public static final String ID_URL_SHIPS = ID_URL + "/ships";
-
+    public static final String ID_URL_BIND = ID_URL + "/ship/1";
     public static final Long ID = 1L;
 
     @MockBean
@@ -86,6 +85,19 @@ class CompanyControllerTest {
     void findById() throws Exception {
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.get(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void bindCompanyShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
