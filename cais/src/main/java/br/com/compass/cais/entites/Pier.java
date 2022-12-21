@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Data
@@ -18,11 +19,10 @@ public class Pier {
     @Column(name = "ID")
     private Long id;
 
-//    @NotBlank
     @Column(name = "NAME")
     private String name;
 
-//    @NotNull
     @Column(name = "SPOTS")
+    @PositiveOrZero
     private Integer spots ;
 }
