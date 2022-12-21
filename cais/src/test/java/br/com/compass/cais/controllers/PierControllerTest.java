@@ -37,6 +37,9 @@ class PierControllerTest {
     public static final String BASE_URL = "/api/pier";
     public static final String ID_URL = BASE_URL + "/1";
     public static final String ID_URL_BIND = ID_URL + "/ship/1";
+
+    public static final String ID_URL_UNLINK = BASE_URL + "/ship/1";
+
     public static final Long ID = 1L;
 
     @MockBean
@@ -128,6 +131,19 @@ class PierControllerTest {
     void bindPierShip() throws Exception {
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void unlinkPierShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_UNLINK)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();

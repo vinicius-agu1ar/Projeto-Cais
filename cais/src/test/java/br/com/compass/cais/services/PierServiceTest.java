@@ -3,6 +3,7 @@ package br.com.compass.cais.services;
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.EntityInUseException;
+import br.com.compass.cais.exceptions.PierFullException;
 import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.repository.PierRepository;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;
@@ -94,7 +95,7 @@ class PierServiceTest {
         Mockito.when(repository.save(any())).thenReturn(pier);
         Mockito.when(assembler.toModel(any())).thenReturn(response);
 
-        PierResponseDTO pierResponseDTO = service.update(ID,request);
+        PierResponseDTO pierResponseDTO = service.update(ID, request);
         assertEquals(response, pierResponseDTO);
         verify(repository).save(any());
 
@@ -106,17 +107,39 @@ class PierServiceTest {
         verify(repository).deleteById(any());
     }
 
-//    @Test
-//    void shouldBind_success() {
-//        Pier pier = new Pier();
-//        Ship ship = new Ship();
-//
-//        Mockito.when(repository.findById(any())).thenReturn(Optional.of(pier));
-//        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
-//        service.bind(pier.getId(), ship.getId());
-//
-//        assertEquals(pier.getClass(), ship.getPier().getClass());
-//    }
+    @Test
+    void shouldBind_success() {
+        Pier pier = new Pier();
+        pier.setSpots(3);
+        Ship ship = new Ship();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(pier));
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.bind(ID, ID);
+
+        assertEquals(pier.getClass(), ship.getPier().getClass());
+    }
+
+    @Test
+    void shouldUnlink_success() {
+        Ship ship = new Ship();
+
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.unlink(ship.getId());
+
+        assertEquals(null, ship.getPier());
+    }
+
+    @Test
+    void shouldBind_error() {
+        Pier pier = new Pier();
+        pier.setId(3L);
+        pier.setSpots(0);
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(pier));
+
+        Assertions.assertThrows(PierFullException.class, () -> service.bind(pier.getId(), ID));
+    }
 
     @Test
     void shouldDeletePier_error() {
