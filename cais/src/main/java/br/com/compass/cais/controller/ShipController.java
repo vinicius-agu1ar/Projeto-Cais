@@ -37,6 +37,12 @@ public class ShipController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
 
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ShipResponseDTO> findById(@PathVariable("id") Long id){
+        log.info("Pesquisando Ship por ID....");
+        ShipResponseDTO shipResponseDTO = service.findBy(id);
+        return ResponseEntity.status(HttpStatus.OK).body(shipResponseDTO);
+    }
 
     @PostMapping
     public ResponseEntity<ShipResponseDTO> create(@RequestBody @Valid ShipRequestDTO request) {
