@@ -1,6 +1,5 @@
 package br.com.compass.cais.services;
 
-import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.exceptions.ShipNotFoundException;
@@ -8,7 +7,6 @@ import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.assembler.ShipInputDisassembler;
 import br.com.compass.cais.services.dto.request.ShipRequestDTO;
-import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
