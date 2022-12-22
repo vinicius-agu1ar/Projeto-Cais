@@ -23,6 +23,5 @@ public class Pier {
     private String name;
 
     @Column(name = "SPOTS")
-    @PositiveOrZero
     private Integer spots ;
 }
