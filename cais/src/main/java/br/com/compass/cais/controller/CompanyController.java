@@ -7,7 +7,6 @@ import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
 import br.com.compass.cais.services.dto.response.ship.ShipResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -46,10 +45,10 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(shipsResumeResponseDTO);
     }
 
-    @PostMapping("/{id}/ship/{companyId}")
-    public ResponseEntity<Void> bindCompanyShip(@PathVariable("id") Long id, @PathVariable("companyId") Long companyId) {
+    @PostMapping("/{id}/ship/{shipId}")
+    public ResponseEntity<Void> bindCompanyShip(@PathVariable("id") Long id, @PathVariable("shipId") Long shipId) {
         log.info("Vinculando uma Company a um Ship...");
-        service.bind(id,companyId);
+        service.bind(id,shipId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
