@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,8 +52,7 @@ class CompanyControllerTest {
     @Test
     void findAll() throws Exception {
         List<CompanyResponseDTO> companies = Arrays.asList(new CompanyResponseDTO());
-        Page<CompanyResponseDTO> page = new PageImpl<>(companies);
-        when(service.findAll(any(Pageable.class))).thenReturn(page);
+        when(service.findAll(any(Pageable.class))).thenReturn(companies);
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.get(BASE_URL)
                         .accept(MediaType.APPLICATION_JSON)

@@ -59,7 +59,7 @@ public class PierController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PierResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid PierRequestDTO request){
-        log.info("Atualizando Company por id...");
+        log.info("Atualizando Pier por id...");
         PierResponseDTO pierResponseDTO = service.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(pierResponseDTO);
     }
