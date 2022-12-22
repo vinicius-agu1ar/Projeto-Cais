@@ -117,7 +117,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CompanyAlreadySelectedException.class)
-    public final ResponseEntity<Object> CompanyAlreadySelectedException(CompanyAlreadySelectedException ex) {
+    public final ResponseEntity<Object> handleCompanyAlreadySelectedException(CompanyAlreadySelectedException ex) {
         log.error(ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_ALREADY_LINKED, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
