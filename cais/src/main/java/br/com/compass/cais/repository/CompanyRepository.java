@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CompanyRepository extends JpaRepository <Company, Long>{
     Page<Company> findByOrigin(Origin origin, Pageable pagination);
 
+    Company findByName(String name);
+
 }

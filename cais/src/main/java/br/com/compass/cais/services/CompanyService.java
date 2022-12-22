@@ -72,6 +72,10 @@ public class CompanyService {
 
     public CompanyResponseDTO create(CompanyRequestDTO request) {
         log.info("Chamando método create - Service Company");
+        Company byName = repository.findByName(request.getName());
+        if (byName != null){
+            throw new EntityInUseException();
+        }
         Company company = disassembler.toDomainObject(request);
         company = create(company);
         return assembler.toModel(company);
