@@ -51,7 +51,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/PierResponseParameters'
+                $ref: '#/components/schemas/PierResponseDTO'
   /api/pier/{id}:
     get:
       tags:
@@ -106,6 +106,39 @@ paths:
       responses:
         '204':
           description: NO CONTENT
+  /api/pier/{id}/ship/{shipId}:
+    post:
+      tags:
+        - Pier
+      operationId: bind
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: shipId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /api/pier/ship/{shipId}:
+    post:
+      tags:
+        - Pier
+      operationId: unlink
+      parameters:
+        - name: shipId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
   /api/company:
     get:
       tags:
@@ -445,17 +478,28 @@ components:
       properties:
         name:
           type: string
+          example: 'Pier A'
         spots:
           type: integer
+          example: 2
     PierResponseDTO:
       type: object
       properties:
         id:
           type: integer
+          example: 1
         name:
           type: string
+          example: 'Pier A'
         spots:
           type: integer
+          example: 2
+    PierResponseName:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Pier B'
     Pageable:
       type: object
       properties:
@@ -469,16 +513,3 @@ components:
           type: array
           items:
             type: string
-    PierResponseParameters:
-      type: object
-      properties:
-        Pier:
-          type: array
-          items:
-            $ref: '#/components/schemas/PierResponseDTO'
-        numberOfElements:
-          type: integer
-        totalElements:
-          type: integer
-        totalPages:
-          type: integer
