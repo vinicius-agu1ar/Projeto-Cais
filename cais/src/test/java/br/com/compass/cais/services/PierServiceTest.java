@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -127,7 +128,7 @@ class PierServiceTest {
         Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
         service.unlink(ship.getId());
 
-        assertEquals(null, ship.getPier());
+        assertNull(ship.getPier());
     }
 
     @Test

@@ -48,10 +48,9 @@ public class PierService {
         return assembler.toModel(pier);
     }
 
-    @Transactional //conversar com o mateus
+    @Transactional
     public void bind(Long id, Long shipId) {
         log.info("Chamando método bind - Service Pier");
-
         Pier pier = fetchOrFail(id);
 
         if (pier.getSpots() < 1) {
