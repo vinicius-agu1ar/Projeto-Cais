@@ -6,8 +6,6 @@ import br.com.compass.cais.services.ShipService;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.assembler.ShipInputDisassembler;
 import br.com.compass.cais.services.dto.request.ShipRequestDTO;
-import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
-import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -127,8 +125,6 @@ class ShipControllerTest {
         return ShipRequestDTO.builder()
                 .name("Test")
                 .weight(100.65)
-                .company(new CompanyResponseDTO())
-                .pier(new PierResponseDTO())
                 .build();
     }
 }
