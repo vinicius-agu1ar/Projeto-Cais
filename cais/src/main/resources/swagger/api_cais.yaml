@@ -1,5 +1,5 @@
 openapi: 3.0.1
-info: 
+info:
   title: API Cais
   description: Projeto de API para gerenciamento de um cais.
   version: 0.0.1
@@ -10,7 +10,7 @@ info:
   license:
     name: GPLv3
     url: https://gnu.org/licenses/gpl-3.0.html
-servers: 
+servers:
   - url: http://localhost:{port}
     description: API do cais
     variables:
@@ -106,8 +106,337 @@ paths:
       responses:
         '204':
           description: NO CONTENT
+  /api/company:
+    get:
+      tags:
+        - Company
+      summary: Lista todos as Companies
+      description: "Através desse endpoint você poderá listar todos as Companies. Existe filtros para o retorno da requisição, utilizando os Params. Ex: Filtrar por Origem - 'http://localhost:8080/api/company?Origin=National' (o valor da origem mesmo sendo um enum, pode ser colocado com letras minusculas). Ex: Ordenar por nome e Origin - 'http://localhost:8080/api/company?sort=name,desc&Origin=National' (mudando desc para asc)."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponseDTO"
+
+        404:
+          description: Not Found
+
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    post:
+      summary: Cadastra uma nova Company
+      description: "Através desse endpoint você poderá cadastrar novas Companies. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
+      tags:
+        - Company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyRequestDTO"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponseDTO"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista as Companies por id
+      description: "Através desse endpoint você poderá consultar Company por id. Se não existir, retornará 404."
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponseDTO"
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Autualizar Company por id
+      description: "Através desse endpoint você poderá atualizar uma Company. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      tags:
+        - Company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyResponseDTO'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              example: {
+                "code": "COMPANY_NOT_FOUND",
+                "message": "Company not found, check before making this request again",
+                "details": [
+                  "COMPANY_NOT_FOUND"
+                ]
+              }
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Requisição Inválida",
+                "details": [
+                  "nome : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    delete:
+      summary: Excluir Company por id
+      description: "Através desse endpoint você poderá excluir uma Company. Se o ID infromado não existir, retornará 404."
+      tags:
+        - Company
+      responses:
+        204:
+          description: "No Content"
+        400:
+          description: Bad Request
+
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/{id}/ships:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista todos os Ships de uma determinada Company
+      description: "Através desse endpoint você poderá listar todos os navios de uma terminada company. EX: http://localhost:8080/api/company/1/ships"
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipResponseDTO"
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/{id}/ship/{shipId}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+      - name: shipId
+        in: path
+        schema:
+          type: integer
+        required: true
+    post:
+      summary: Vincular Company a um Ship
+      description: "Através desse endpoint você irá vincular uma Company a um Ship. EX: http://localhost:8080/api/company/2/ship/7"
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyAlreadtLinked'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/ship/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+
+    post:
+      summary: Desvincular Company a um Ship
+      description: "Através desse endpoint você irá desvincular uma Company de um Ship. EX: http://localhost:8080/api/company/ship/7"
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
 components:
   schemas:
+    CompanyAlreadtLinked:
+      type: object
+      properties:
+        code:
+          type: string
+          example: COMPANY_ALREADY_LINKED
+        message:
+          type: string
+          example: A company is already linked to this ship, please unlink first
+        details:
+          type: array
+          items:
+            type: string
+            example: COMPANY_ALREADY_LINKED
+    ShipNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: SHIP_NOT_FOUND
+        message:
+          type: string
+          example: Ship not found, check before making this request again
+        details:
+          type: array
+          items:
+            type: string
+            example: SHIP_NOT_FOUND
+    CompanyNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: COMPANY_NOT_FOUND
+        message:
+          type: string
+          example: Company not found, check before making this request again
+        details:
+          type: array
+          items:
+            type: string
+            example: COMPANY_NOT_FOUND
+    ShipResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+        pier:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Pier Compass
+    CompanyResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        cnpj:
+          type: string
+          example: 12.633.175/0002-41
+        name:
+          type: string
+          example: Compass.Uol
+        origin:
+          type: string
+          enum:
+            - Nacional
+    CompanyRequestDTO:
+      required:
+        - cnpj
+        - name
+        - origin
+      type: object
+      properties:
+        cnpj:
+          type: string
+          example: 12.633.175/0002-41
+        name:
+          type: string
+          example: Compass.Uol
+        origin:
+          type: string
+          example: Nacional
+
     PierRequestDTO:
       required:
         - name
