@@ -26,9 +26,9 @@ public class CompanyController {
     private final CompanyService service;
 
     @GetMapping
-    public ResponseEntity<Page<CompanyResponseDTO>> findAll(@RequestParam(required = false, name = "Origin") Origin origin, @PageableDefault(size = 10) Pageable pagination) {
+    public ResponseEntity<List<CompanyResponseDTO>> findAll(@RequestParam(required = false, name = "Origin") Origin origin, @PageableDefault(size = 10) Pageable pagination) {
         log.info("Listando Companies com página de {} registros...", pagination.getPageSize());
-        Page<CompanyResponseDTO> responsePage = service.verifyCompanyResponseDTO(origin,pagination);
+        List<CompanyResponseDTO> responsePage = service.verifyCompanyResponseDTO(origin,pagination);
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }
 
