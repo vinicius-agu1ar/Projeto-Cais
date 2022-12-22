@@ -43,11 +43,10 @@ public class CompanyService {
 
     private final CompanyInputDisassembler disassembler;
 
-    public Page<CompanyResponseDTO> findAll(Pageable pageable) {
+    public List<CompanyResponseDTO> findAll(Pageable pageable) {
         log.info("Chamando método findAll - Service Company");
         Page<Company> pageCompanies = repository.findAll(pageable);
-        List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(pageCompanies.getContent());
-        return new PageImpl<>(companyResponseDTOS, pageable, pageCompanies.getTotalElements());
+        return assembler.toCollectionModel(pageCompanies.getContent());
     }
 
     public List<ShipResumeResponseDTO> findAll(Long companyId) {
@@ -120,15 +119,13 @@ public class CompanyService {
         return repository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
     }
 
-    public Page<CompanyResponseDTO> verifyCompanyResponseDTO(Origin origin, Pageable pageable) {
+    public List<CompanyResponseDTO> verifyCompanyResponseDTO(Origin origin, Pageable pageable) {
         log.info("Chamando método verifyCompanyResponseDTO - Service Company");
         if(origin == null){
             return findAll(pageable);
         }else{
             List<Company> companies = repository.findByOrigin(origin, pageable).getContent();
-            List<CompanyResponseDTO> companyResponseDTOS = assembler.toCollectionModel(companies);
-
-            return new PageImpl<>(companyResponseDTOS, pageable, companies.size());
+            return assembler.toCollectionModel(companies);
         }
     }
 
