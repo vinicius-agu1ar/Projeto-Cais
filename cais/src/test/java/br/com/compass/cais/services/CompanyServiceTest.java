@@ -149,7 +149,7 @@ class CompanyServiceTest {
         Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
         Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companyResponseDTOs);
 
-        Page<CompanyResponseDTO> all = service.findAll(pageable);
+        List<CompanyResponseDTO> all = service.findAll(pageable);
 
         Assertions.assertEquals(companyResponseDTOPage, all);
     }
