@@ -4,6 +4,7 @@ import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
+import br.com.compass.cais.exceptions.CompanyAlreadySelectedException;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.repository.CompanyRepository;
 import br.com.compass.cais.repository.ShipRepository;
@@ -88,8 +89,19 @@ public class CompanyService {
         log.info("Chamando método bind - Service Company");
         Company company = fetchOrFail(id);
         Ship ship = shipService.fetchOrFail(shipId);
+        if(ship.getCompany() != null){
+            throw new CompanyAlreadySelectedException();
+        }
         ship.setCompany(company);
     }
+
+    @Transactional
+    public void unlink(Long id) {
+        log.info("Chamando método unlink - Service Company");
+        Ship ship = shipService.fetchOrFail(id);
+        ship.setCompany(null);
+    }
+
     @Transactional
     public void delete(Long companyId){
         log.info("Chamando método delete (excluindo no repository) - Service Company");
