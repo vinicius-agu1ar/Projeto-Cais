@@ -144,14 +144,13 @@ class CompanyServiceTest {
     void shouldFindAllCompanies_success() {
         Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
         List<CompanyResponseDTO> companyResponseDTOs = Arrays.asList(new CompanyResponseDTO());
-        PageImpl<CompanyResponseDTO> companyResponseDTOPage = new PageImpl<>(companyResponseDTOs, pageable, companiesPage.getTotalElements());
 
         Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
         Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companyResponseDTOs);
 
         List<CompanyResponseDTO> all = service.findAll(pageable);
 
-        Assertions.assertEquals(companyResponseDTOPage, all);
+        Assertions.assertEquals(companyResponseDTOs, all);
     }
 
     @Test
