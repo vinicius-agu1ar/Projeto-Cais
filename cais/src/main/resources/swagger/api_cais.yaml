@@ -143,8 +143,14 @@ paths:
     get:
       tags:
         - Company
-      summary: Lista todos as Companies
-      description: "Através desse endpoint você poderá listar todos as Companies. Existe filtros para o retorno da requisição, utilizando os Params. Ex: Filtrar por Origem - 'http://localhost:8080/api/company?Origin=National' (o valor da origem mesmo sendo um enum, pode ser colocado com letras minusculas). Ex: Ordenar por nome e Origin - 'http://localhost:8080/api/company?sort=name,desc&Origin=National' (mudando desc para asc)."
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todas as Companies
+      description: "Através desse endpoint você poderá listar todas as Companies. Existe filtros para o retorno da requisição, utilizando os Params. Ex: Filtrar por Origem - 'http://localhost:8080/api/company?Origin=National' (o valor da origem mesmo sendo um enum, pode ser colocado com letras minusculas). Ex: Ordenar por nome e Origin - 'http://localhost:8080/api/company?sort=name,desc&Origin=National' (mudando desc para asc)."
       responses:
         200:
           description: OK
@@ -229,7 +235,7 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     put:
-      summary: Autualizar Company por id
+      summary: Atualizar Company por id
       description: "Através desse endpoint você poderá atualizar uma Company. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
       tags:
         - Company
@@ -375,8 +381,210 @@ paths:
                 $ref: '#/components/schemas/ShipNotFound'
         5XX:
           description: "Erro no servidor, tente mais tarde!"
+  /api/ship:
+    get:
+      tags:
+        - Ship
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todos Ships
+      description: "Através desse endpoint você poderá listar todos os Ships. Existe filtros para o retorno da requisição, utilizando os Params. Ex: Filtrar por weight - 'http://localhost:8080/api/ship?sort=weight,asc'. Ex: Ordenar por name - 'http://localhost:8080/api/ship?sort=name,asc' (mudando desc para asc)."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTOComEmpresa'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    post:
+      summary: Cadastra um novo Ship
+      description: "Através desse endpoint você poderá cadastrar novos Ships. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
+      tags:
+        - Ship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipRequestDTO"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTONull'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/ship/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista Ships por id
+      description: "Através desse endpoint você poderá consultar Ship por id. Se não existir, retornará 404."
+      tags:
+        - Ship
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTOComEmpresa'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Atualizar Ship por id
+      description: "Através desse endpoint você poderá atualizar um Ship. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      tags:
+        - Ship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTOComEmpresa'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    delete:
+      summary: Excluir Ship por id
+      description: "Através desse endpoint você poderá excluir um Ship. Se o ID infromado não existir, retornará 404."
+      tags:
+        - Ship
+      responses:
+        204:
+          description: "No Content"
+        400:
+          description: Bad Request
+
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
 components:
   schemas:
+    ShipResponseDTONull:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+        company:
+          type: string
+          example: null
+        pier:
+          type: string
+          example: null
+    ShipRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+    ShipResponseDTOComEmpresa:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+        company:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Compass.Uol
+            origin:
+              type: string
+              enum:
+                - National
+        pier:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Pier Compass
+
     CompanyAlreadtLinked:
       type: object
       properties:
