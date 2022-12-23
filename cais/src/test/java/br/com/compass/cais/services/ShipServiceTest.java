@@ -17,7 +17,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +41,9 @@ class ShipServiceTest {
     private ShipDTOAssembler assembler;
     @Mock
     private ShipInputDisassembler disassembler;
+
+    @Mock
+    private Pageable pageable;
 
     @Test
     void shouldDeleteShip_success() {
@@ -89,6 +97,19 @@ class ShipServiceTest {
         ShipResponseDTO shipResponseDTO = service.update(ID,request);
         assertEquals(response, shipResponseDTO);
         verify(repository).save(any());
+    }
+    @Test
+    void shouldFindAllShips_success(){
+        Page<Ship> shipsPage = new PageImpl<>(List.of(new Ship()));
+        List<ShipResponseDTO> shipResponseDTOs = Arrays.asList(new ShipResponseDTO());
+        PageImpl<ShipResponseDTO> shipResponseDTOPage = new PageImpl<>(shipResponseDTOs, pageable, shipsPage.getTotalElements());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(shipsPage);
+        Mockito.when(assembler.toCollectionModel(shipsPage.getContent())).thenReturn(shipResponseDTOs);
+
+        Page<ShipResponseDTO> all = service.findAll(pageable);
+
+        Assertions.assertEquals(shipResponseDTOPage, all);
     }
     @Test
     void findBy_sucess(){

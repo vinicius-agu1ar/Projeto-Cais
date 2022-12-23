@@ -54,8 +54,7 @@ class CompanyControllerTest {
     @Test
     void findAll() throws Exception {
         List<CompanyResponseDTO> companies = Arrays.asList(new CompanyResponseDTO());
-        Page<CompanyResponseDTO> page = new PageImpl<>(companies);
-        when(service.findAll(any(Pageable.class))).thenReturn(page);
+        when(service.findAll(any(Pageable.class))).thenReturn(companies);
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.get(BASE_URL)
                         .accept(MediaType.APPLICATION_JSON)
