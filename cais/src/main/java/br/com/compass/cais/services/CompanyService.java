@@ -61,6 +61,15 @@ public class CompanyService {
         return assembler.toModel(company);
     }
 
+    public List<CompanyResponseDTO> findByName(String name) {
+        log.info("Chamando método findByName - Service Company");
+        List<Company> companies = repository.findByNameStartingWithIgnoreCase(name);
+        if(companies.isEmpty()){
+            throw new CompanyNotFoundException();
+        }
+        return assembler.toCollectionModel(companies);
+    }
+
     public CompanyResponseDTO update(Long id, CompanyRequestDTO request) {
         log.info("Chamando método update - Service Company");
         Company company = fetchOrFail(id);
@@ -119,7 +128,7 @@ public class CompanyService {
     }
 
     private Company fetchOrFail(Long companyId){
-        log.info("Chamando método fetchOrFail - Service Company");
+        log.info("Chamando método fetchOrFailId - Service Company");
         return repository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
     }
 
