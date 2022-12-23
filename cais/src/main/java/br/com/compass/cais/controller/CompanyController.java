@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 
@@ -35,6 +36,13 @@ public class CompanyController {
     public ResponseEntity<CompanyResponseDTO> findBy(@PathVariable("id") Long id){
         log.info("Buscando Company por id...");
         CompanyResponseDTO companyResponseDTO = service.findBy(id);
+        return ResponseEntity.status(HttpStatus.OK ).body(companyResponseDTO);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<CompanyResponseDTO>> findByName(@RequestParam("name") String name){
+        log.info("Buscando Company por name...");
+        List<CompanyResponseDTO> companyResponseDTO = service.findByName(name);
         return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
     }
 
