@@ -28,13 +28,38 @@ paths:
             schema:
               $ref: '#/components/schemas/PierRequestDTO'
         required: true
+      summary: Cadastra um novo Pier
       responses:
         '201':
-          description: OK
+          description: CREATED
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PierResponseDTO'
+        '400':
+          description: BAD REQUEST
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name: não deve estar em branco"
+                ]
+              }
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
     get:
       tags:
         - Pier
@@ -45,6 +70,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/Pageable'
+      summary: Lista todos os Piers
       responses:
         '200':
           description: OK
@@ -52,6 +78,11 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PierResponseDTO'
+        '404':
+          description: NOT FOUND
+
+        '5XX':
+          description: INTERNAL SERVER ERROR
   /api/pier/{id}:
     get:
       tags:
@@ -63,6 +94,7 @@ paths:
           required: true
           schema:
             type: integer
+      summary: Lista os Piers por ID
       responses:
         '200':
           description: OK
@@ -70,6 +102,16 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PierResponseDTO'
+        '400':
+          description: BAD REQUEST
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
     put:
       tags:
         - Pier
@@ -86,6 +128,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PierRequestDTO'
         required: true
+      summary: Atualiza um Pier por ID
       responses:
         '200':
           description: OK
@@ -93,6 +136,25 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PierResponseDTO'
+        '400':
+          description: BAD REQUEST
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Requisição Inválida",
+                "details": [
+                  "nome: não deve estar em branco"
+                ]
+              }
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
     delete:
       tags:
         - Pier
@@ -103,9 +165,29 @@ paths:
           required: true
           schema:
             type: integer
+      summary: Exclui um pier por ID
       responses:
         '204':
           description: NO CONTENT
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              example: {
+                "code": "PIER_IS_IN_USE",
+                "message": "Pier is in use, please check before performing this action again",
+                "details": [
+                  "PIER_IS_IN_USE"
+                ]
+              }
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
   /api/pier/{id}/ship/{shipId}:
     post:
       tags:
@@ -122,9 +204,29 @@ paths:
           required: true
           schema:
             type: integer
+      summary: Vincula um Pier a um Ship
       responses:
         '200':
           description: OK
+        '400':
+          description: BAD REQUEST
+          content:
+            application/json:
+              example: {
+                "code": "PIER_FULL",
+                "message": "Pier is full, try to change the pier",
+                "details": [
+                  "PIER_FULL"
+                ]
+              }
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
   /api/pier/ship/{shipId}:
     post:
       tags:
@@ -136,9 +238,18 @@ paths:
           required: true
           schema:
             type: integer
+      summary: Desvincula um Pier a um Ship
       responses:
         '200':
           description: OK
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
   /api/company:
     get:
       tags:
@@ -158,7 +269,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CompanyResponseDTO"
-
         404:
           description: Not Found
 
@@ -189,7 +299,7 @@ paths:
                 "code": "BAD_REQUEST",
                 "message": "Request invalid",
                 "details": [
-                  "name : não deve estar em branco"
+                  "name: não deve estar em branco"
                 ]
               }
         409:
@@ -584,7 +694,6 @@ components:
             name:
               type: string
               example: Pier Compass
-
     CompanyAlreadtLinked:
       type: object
       properties:
@@ -677,7 +786,6 @@ components:
         origin:
           type: string
           example: Nacional
-
     PierRequestDTO:
       required:
         - name
@@ -702,12 +810,20 @@ components:
         spots:
           type: integer
           example: 2
-    PierResponseName:
+    PierNotFound:
       type: object
       properties:
-        name:
+        code:
           type: string
-          example: 'Pier B'
+          example: PIER_NOT_FOUND
+        message:
+          type: string
+          example: Pier not found, check before making this request again
+        details:
+          type: array
+          items:
+            type: string
+            example: PIER_NOT_FOUND
     Pageable:
       type: object
       properties:
