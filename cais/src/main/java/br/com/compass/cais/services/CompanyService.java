@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -69,13 +68,9 @@ public class CompanyService {
         company = create(company);
         return assembler.toModel(company);
     }
-
+    @Transactional
     public CompanyResponseDTO create(CompanyRequestDTO request) {
         log.info("Chamando método create - Service Company");
-        Company byName = repository.findByName(request.getName());
-        if (byName != null){
-            throw new EntityInUseException();
-        }
         Company company = disassembler.toDomainObject(request);
         company = create(company);
         return assembler.toModel(company);
@@ -84,7 +79,12 @@ public class CompanyService {
     @Transactional
     public Company create(Company company){
         log.info("Chamando método create (salvando no repository) - Service Company");
-        return repository.save(company);
+        try {
+            return repository.save(company);
+        } catch (DataIntegrityViolationException ex) {
+            throw new EntityInUseException();
+        }
+
     }
 
     @Transactional

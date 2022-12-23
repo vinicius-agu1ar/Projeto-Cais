@@ -2,6 +2,7 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Ship;
+import br.com.compass.cais.exceptions.CompanyAlreadySelectedException;
 import br.com.compass.cais.exceptions.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.EntityInUseException;
 import br.com.compass.cais.repository.CompanyRepository;
@@ -108,6 +109,14 @@ class CompanyServiceTest {
     }
 
     @Test
+    void shouldCreateCompany_error() {
+        Company company = new Company();
+
+        doThrow(new DataIntegrityViolationException("test")).when(repository).save(any());
+        Assertions.assertThrows(EntityInUseException.class, () -> service.create(company));
+    }
+
+    @Test
     void shouldUpdateCompany_success() {
         Company company = new Company();
         CompanyRequestDTO request = new CompanyRequestDTO();
@@ -163,6 +172,20 @@ class CompanyServiceTest {
         service.bind(ID, ID);
 
         assertEquals(company.getClass(), ship.getCompany().getClass());
+    }
+
+    @Test
+    void shouldBind_error() {
+        Company company = new Company();
+        Ship ship = new Ship();
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.bind(ID, ID);
+
+        Company company1 = new Company();
+        company1.setId(3L);
+
+        Assertions.assertThrows(CompanyAlreadySelectedException.class, () -> service.bind(company1.getId(), ID));
     }
 
     @Test
