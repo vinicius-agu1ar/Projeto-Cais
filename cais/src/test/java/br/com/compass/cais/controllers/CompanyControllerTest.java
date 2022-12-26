@@ -7,14 +7,13 @@ import br.com.compass.cais.services.CompanyService;
 import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
 import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,10 +21,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import br.com.compass.cais.utils.TestUtils;
 
 import java.util.Arrays;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -35,7 +34,11 @@ class CompanyControllerTest {
 
     public static final String BASE_URL = "/api/company";
     public static final String ID_URL = BASE_URL + "/1";
+    public static final String ID_URL_SHIPS = ID_URL + "/ships";
+    public static final String ID_URL_BIND = ID_URL + "/ship/1";
+    public static final String ID_URL_UNLINK = BASE_URL + "/ship/1";
     public static final Long ID = 1L;
+
     @MockBean
     private CompanyRepository repository;
     @MockBean
@@ -49,8 +52,7 @@ class CompanyControllerTest {
     @Test
     void findAll() throws Exception {
         List<CompanyResponseDTO> companies = Arrays.asList(new CompanyResponseDTO());
-        Page<CompanyResponseDTO> page = new PageImpl<>(companies);
-        when(service.findAll(any(Pageable.class))).thenReturn(page);
+        when(service.findAll(any(Pageable.class))).thenReturn(companies);
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.get(BASE_URL)
                         .accept(MediaType.APPLICATION_JSON)
@@ -89,6 +91,45 @@ class CompanyControllerTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
+
+    @Test
+    void bindCompanyShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void unlinkCompanyShip() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_UNLINK)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void findAllShips() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(ID_URL_SHIPS)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
     @Test
     void update() throws Exception {
         CompanyRequestDTO request = getCompanyRequestDTO();

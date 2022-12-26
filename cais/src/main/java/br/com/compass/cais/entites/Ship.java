@@ -4,15 +4,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "PIER")
-public class Pier {
+@Table(name = "SHIP")
+public class Ship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +19,14 @@ public class Pier {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "SPOTS")
-    private Integer spots ;
+    @Column(name = "WEIGHT")
+    private Double weight;
+
+    @OneToOne
+    @JoinColumn(name = "COMPANY_ID")
+    private Company company;
+
+    @OneToOne
+    @JoinColumn(name = "PIER_ID")
+    private Pier pier;
 }

@@ -1,0 +1,839 @@
+openapi: 3.0.1
+info:
+  title: API Cais
+  description: Projeto de API para gerenciamento de um cais.
+  version: 0.0.1
+  termsOfService: https://github.com/vinicius-agu1ar/Projeto-Cais/blob/dev/README.md
+  contact:
+    name: Lucas, Nalbert e Vinicius
+    url: https://github.com/vinicius-agu1ar/Projeto-Cais
+  license:
+    name: GPLv3
+    url: https://gnu.org/licenses/gpl-3.0.html
+servers:
+  - url: http://localhost:{port}
+    description: API do cais
+    variables:
+      port:
+        default: '8080'
+paths:
+  /api/pier:
+    post:
+      tags:
+        - Pier
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PierRequestDTO'
+        required: true
+      summary: Cadastra um novo Pier
+      responses:
+        '201':
+          description: CREATED
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+        '400':
+          description: BAD REQUEST
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name: não deve estar em branco"
+                ]
+              }
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
+    get:
+      tags:
+        - Pier
+      operationId: findAll
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todos os Piers
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+        '404':
+          description: NOT FOUND
+
+        '5XX':
+          description: INTERNAL SERVER ERROR
+  /api/pier/{id}:
+    get:
+      tags:
+        - Pier
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      summary: Lista os Piers por ID
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+        '400':
+          description: BAD REQUEST
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
+    put:
+      tags:
+        - Pier
+      operationId: update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PierRequestDTO'
+        required: true
+      summary: Atualiza um Pier por ID
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PierResponseDTO'
+        '400':
+          description: BAD REQUEST
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Requisição Inválida",
+                "details": [
+                  "nome: não deve estar em branco"
+                ]
+              }
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
+    delete:
+      tags:
+        - Pier
+      operationId: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      summary: Exclui um pier por ID
+      responses:
+        '204':
+          description: NO CONTENT
+        '409':
+          description: CONFLICT
+          content:
+            application/json:
+              example: {
+                "code": "PIER_IS_IN_USE",
+                "message": "Pier is in use, please check before performing this action again",
+                "details": [
+                  "PIER_IS_IN_USE"
+                ]
+              }
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
+  /api/pier/{id}/ship/{shipId}:
+    post:
+      tags:
+        - Pier
+      operationId: bind
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: shipId
+          in: path
+          required: true
+          schema:
+            type: integer
+      summary: Vincula um Pier a um Ship
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: BAD REQUEST
+          content:
+            application/json:
+              example: {
+                "code": "PIER_FULL",
+                "message": "Pier is full, try to change the pier",
+                "details": [
+                  "PIER_FULL"
+                ]
+              }
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PierNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
+  /api/pier/ship/{shipId}:
+    post:
+      tags:
+        - Pier
+      operationId: unlink
+      parameters:
+        - name: shipId
+          in: path
+          required: true
+          schema:
+            type: integer
+      summary: Desvincula um Pier a um Ship
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        '5XX':
+          description: "INTERNAL SERVER ERROR"
+  /api/company:
+    get:
+      tags:
+        - Company
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todas as Companies
+      description: "Através desse endpoint você poderá listar todas as Companies. Existe filtros para o retorno da requisição, utilizando os Params. Ex: Filtrar por Origem - 'http://localhost:8080/api/company?Origin=National' (o valor da origem mesmo sendo um enum, pode ser colocado com letras minusculas). Ex: Ordenar por nome e Origin - 'http://localhost:8080/api/company?sort=name,desc&Origin=National' (mudando desc para asc)."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponseDTO"
+        404:
+          description: Not Found
+
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    post:
+      summary: Cadastra uma nova Company
+      description: "Através desse endpoint você poderá cadastrar novas Companies. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
+      tags:
+        - Company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyRequestDTO"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponseDTO"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name: não deve estar em branco"
+                ]
+              }
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista as Companies por id
+      description: "Através desse endpoint você poderá consultar Company por id. Se não existir, retornará 404."
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponseDTO"
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Atualizar Company por id
+      description: "Através desse endpoint você poderá atualizar uma Company. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      tags:
+        - Company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyResponseDTO'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              example: {
+                "code": "COMPANY_NOT_FOUND",
+                "message": "Company not found, check before making this request again",
+                "details": [
+                  "COMPANY_NOT_FOUND"
+                ]
+              }
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Requisição Inválida",
+                "details": [
+                  "nome : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    delete:
+      summary: Excluir Company por id
+      description: "Através desse endpoint você poderá excluir uma Company. Se o ID infromado não existir, retornará 404."
+      tags:
+        - Company
+      responses:
+        204:
+          description: "No Content"
+        400:
+          description: Bad Request
+
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/{id}/ships:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista todos os Ships de uma determinada Company
+      description: "Através desse endpoint você poderá listar todos os navios de uma terminada company. EX: http://localhost:8080/api/company/1/ships"
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipResponseDTO"
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/{id}/ship/{shipId}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+      - name: shipId
+        in: path
+        schema:
+          type: integer
+        required: true
+    post:
+      summary: Vincular Company a um Ship
+      description: "Através desse endpoint você irá vincular uma Company a um Ship. EX: http://localhost:8080/api/company/2/ship/7"
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyAlreadtLinked'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/company/ship/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+
+    post:
+      summary: Desvincular Company a um Ship
+      description: "Através desse endpoint você irá desvincular uma Company de um Ship. EX: http://localhost:8080/api/company/ship/7"
+      tags:
+        - Company
+      responses:
+        200:
+          description: "OK"
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/ship:
+    get:
+      tags:
+        - Ship
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todos Ships
+      description: "Através desse endpoint você poderá listar todos os Ships. Existe filtros para o retorno da requisição, utilizando os Params. Ex: Filtrar por weight - 'http://localhost:8080/api/ship?sort=weight,asc'. Ex: Ordenar por name - 'http://localhost:8080/api/ship?sort=name,asc' (mudando desc para asc)."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTOComEmpresa'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    post:
+      summary: Cadastra um novo Ship
+      description: "Através desse endpoint você poderá cadastrar novos Ships. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
+      tags:
+        - Ship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShipRequestDTO"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTONull'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/ship/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista Ships por id
+      description: "Através desse endpoint você poderá consultar Ship por id. Se não existir, retornará 404."
+      tags:
+        - Ship
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTOComEmpresa'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Atualizar Ship por id
+      description: "Através desse endpoint você poderá atualizar um Ship. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      tags:
+        - Ship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipResponseDTOComEmpresa'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    delete:
+      summary: Excluir Ship por id
+      description: "Através desse endpoint você poderá excluir um Ship. Se o ID infromado não existir, retornará 404."
+      tags:
+        - Ship
+      responses:
+        204:
+          description: "No Content"
+        400:
+          description: Bad Request
+
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+components:
+  schemas:
+    ShipResponseDTONull:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+        company:
+          type: string
+          example: null
+        pier:
+          type: string
+          example: null
+    ShipRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+    ShipResponseDTOComEmpresa:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+        company:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Compass.Uol
+            origin:
+              type: string
+              enum:
+                - National
+        pier:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Pier Compass
+    CompanyAlreadtLinked:
+      type: object
+      properties:
+        code:
+          type: string
+          example: COMPANY_ALREADY_LINKED
+        message:
+          type: string
+          example: A company is already linked to this ship, please unlink first
+        details:
+          type: array
+          items:
+            type: string
+            example: COMPANY_ALREADY_LINKED
+    ShipNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: SHIP_NOT_FOUND
+        message:
+          type: string
+          example: Ship not found, check before making this request again
+        details:
+          type: array
+          items:
+            type: string
+            example: SHIP_NOT_FOUND
+    CompanyNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: COMPANY_NOT_FOUND
+        message:
+          type: string
+          example: Company not found, check before making this request again
+        details:
+          type: array
+          items:
+            type: string
+            example: COMPANY_NOT_FOUND
+    ShipResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Ship
+        weight:
+          type: number
+          example: 1986.88
+        pier:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Pier Compass
+    CompanyResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        cnpj:
+          type: string
+          example: 12.633.175/0002-41
+        name:
+          type: string
+          example: Compass.Uol
+        origin:
+          type: string
+          enum:
+            - Nacional
+    CompanyRequestDTO:
+      required:
+        - cnpj
+        - name
+        - origin
+      type: object
+      properties:
+        cnpj:
+          type: string
+          example: 12.633.175/0002-41
+        name:
+          type: string
+          example: Compass.Uol
+        origin:
+          type: string
+          example: Nacional
+    PierRequestDTO:
+      required:
+        - name
+        - spots
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Pier A'
+        spots:
+          type: integer
+          example: 2
+    PierResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'Pier A'
+        spots:
+          type: integer
+          example: 2
+    PierNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: PIER_NOT_FOUND
+        message:
+          type: string
+          example: Pier not found, check before making this request again
+        details:
+          type: array
+          items:
+            type: string
+            example: PIER_NOT_FOUND
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+        size:
+          minimum: 1
+          type: integer
+        sort:
+          type: array
+          items:
+            type: string

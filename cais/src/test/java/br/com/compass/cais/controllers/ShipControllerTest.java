@@ -1,21 +1,21 @@
 package br.com.compass.cais.controllers;
 
-import br.com.compass.cais.controller.PierController;
-import br.com.compass.cais.repository.PierRepository;
-import br.com.compass.cais.services.PierService;
-import br.com.compass.cais.services.assembler.PierDTOAssembler;
-import br.com.compass.cais.services.assembler.PierInputDisassembler;
-import br.com.compass.cais.services.dto.request.PierRequestDTO;
-import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
+import br.com.compass.cais.controller.ShipController;
+import br.com.compass.cais.repository.ShipRepository;
+import br.com.compass.cais.services.ShipService;
+import br.com.compass.cais.services.assembler.ShipDTOAssembler;
+import br.com.compass.cais.services.assembler.ShipInputDisassembler;
+import br.com.compass.cais.services.dto.request.ShipRequestDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -27,92 +27,27 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
-@WebMvcTest(controllers = PierController.class)
-@AutoConfigureMockMvc(addFilters = false) // ignorando a camada do security
-class PierControllerTest {
+@WebMvcTest(controllers = ShipController.class)
+@AutoConfigureMockMvc(addFilters = false)
+class ShipControllerTest {
 
-    public static final String BASE_URL = "/api/pier";
+    public static final String BASE_URL = "/api/ship";
     public static final String ID_URL = BASE_URL + "/1";
-    public static final String ID_URL_BIND = ID_URL + "/ship/1";
-
-    public static final String ID_URL_UNLINK = BASE_URL + "/ship/1";
-
     public static final Long ID = 1L;
 
     @MockBean
-    private PierRepository repository;
+    private ShipRepository repository;
     @MockBean
-    private PierService service;
+    private ShipService service;
     @MockBean
-    private PierDTOAssembler assembler;
+    private ShipDTOAssembler assembler;
     @MockBean
-    private PierInputDisassembler disassembler;
+    private ShipInputDisassembler disassembler;
     @Autowired
     private MockMvc mvc;
-
-    @Test
-    void findAll() throws Exception {
-        List<PierResponseDTO> piers = Arrays.asList(new PierResponseDTO());
-        Page<PierResponseDTO> page = new PageImpl<>(piers);
-        when(service.findAll(any(Pageable.class))).thenReturn(page);
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(BASE_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        MockHttpServletResponse resposta = result.getResponse();
-        assertEquals(HttpStatus.OK.value(), resposta.getStatus());
-    }
-
-    @Test
-    void create() throws Exception {
-        PierRequestDTO request = getPierRequestDTO();
-        String input = TestUtils.mapToJson(request);
-
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(BASE_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(input)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-    }
-
-    @Test
-    void findById() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(ID_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    @Test
-    void update() throws Exception {
-        PierRequestDTO request = getPierRequestDTO();
-        String input = TestUtils.mapToJson(request);
-
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.put(ID_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(input)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
 
     @Test
     void delete() throws Exception {
@@ -128,22 +63,55 @@ class PierControllerTest {
     }
 
     @Test
-    void bindPierShip() throws Exception {
+    void create() throws Exception {
+        ShipRequestDTO request = getShipRequestDTO();
+        String input = TestUtils.mapToJson(request);
+
         MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                .perform(MockMvcRequestBuilders.post(BASE_URL)
                         .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
     @Test
-    void unlinkPierShip() throws Exception {
+    void update() throws Exception {
+        ShipRequestDTO request = getShipRequestDTO();
+        String input = TestUtils.mapToJson(request);
+
         MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(ID_URL_UNLINK)
+                .perform(MockMvcRequestBuilders.put(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+    @Test
+    void findAll() throws Exception {
+        List<ShipResponseDTO> ships = Arrays.asList(new ShipResponseDTO());
+        Page<ShipResponseDTO> page = new PageImpl<>(ships);
+        when(service.findAll(any(Pageable.class))).thenReturn(page);
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(BASE_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        MockHttpServletResponse resposta = result.getResponse();
+        assertEquals(HttpStatus.OK.value(), resposta.getStatus());
+    }
+    @Test
+    void findById() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(ID_URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -153,10 +121,10 @@ class PierControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    private PierRequestDTO getPierRequestDTO() {
-        return PierRequestDTO.builder()
+    private ShipRequestDTO getShipRequestDTO() {
+        return ShipRequestDTO.builder()
                 .name("Test")
-                .spots(1)
+                .weight(100.65)
                 .build();
     }
 }

@@ -3,11 +3,10 @@ package br.com.compass.cais.controller;
 import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.services.CompanyService;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Slf4j
@@ -25,9 +25,10 @@ public class CompanyController {
     private final CompanyService service;
 
     @GetMapping
-    public ResponseEntity<Page<CompanyResponseDTO>> findAll(@RequestParam(required = false, name = "Origin") Origin origin, @PageableDefault(size = 10) Pageable pagination) {
+    public ResponseEntity<List<CompanyResponseDTO>> findAll(@RequestParam(required = false, name = "Origin") Origin origin, @PageableDefault(size = 10)
+    Pageable pagination, @RequestParam(required = false, name = "name") String name) {
         log.info("Listando Companies com página de {} registros...", pagination.getPageSize());
-        Page<CompanyResponseDTO> responsePage = service.verifyCompanyResponseDTO(origin,pagination);
+        List<CompanyResponseDTO> responsePage = service.verifyCompanyResponseDTO(origin,pagination,name);
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }
 
@@ -35,7 +36,28 @@ public class CompanyController {
     public ResponseEntity<CompanyResponseDTO> findBy(@PathVariable("id") Long id){
         log.info("Buscando Company por id...");
         CompanyResponseDTO companyResponseDTO = service.findBy(id);
-        return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
+        return ResponseEntity.status(HttpStatus.OK ).body(companyResponseDTO);
+    }
+
+    @GetMapping("/{id}/ships")
+    public ResponseEntity<List<ShipResumeResponseDTO>> findAllShips(@PathVariable("id") Long id){
+        log.info("Listando Ships de uma determinada Company...");
+        List<ShipResumeResponseDTO> shipsResumeResponseDTO = service.findAll(id);
+        return ResponseEntity.status(HttpStatus.OK).body(shipsResumeResponseDTO);
+    }
+
+    @PostMapping("/{id}/ship/{shipId}")
+    public ResponseEntity<Void> bindCompanyShip(@PathVariable("id") Long id, @PathVariable("shipId") Long shipId) {
+        log.info("Vinculando uma Company a um Ship...");
+        service.bind(id,shipId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/ship/{id}")
+    public ResponseEntity<Void> unlinkCompanyShip(@PathVariable("id") Long id) {
+        log.info("Desvinculando um Company a um Ship...");
+        service.unlink(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping("/{id}")

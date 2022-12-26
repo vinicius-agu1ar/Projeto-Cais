@@ -1,13 +1,18 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
-import br.com.compass.cais.exceptions.CompanyNotFoundException;
-import br.com.compass.cais.exceptions.EntityInUseException;
+import br.com.compass.cais.entites.Ship;
+import br.com.compass.cais.exceptions.response.CompanyAlreadySelectedException;
+import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
+import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.repository.CompanyRepository;
+import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
 import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
+import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
-import br.com.compass.cais.services.dto.response.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResumeResponseDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +31,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +45,15 @@ class CompanyServiceTest {
 
     @Mock
     private CompanyRepository repository;
+
+    @Mock
+    private ShipRepository repositoryShip;
+
+    @Mock
+    private ShipService shipService;
+
+    @Mock
+    private ShipDTOAssembler shipAssembler;
 
     @Mock
     private CompanyDTOAssembler assembler;
@@ -65,6 +79,21 @@ class CompanyServiceTest {
     }
 
     @Test
+    void shouldFindAllShipsInCompanies_success() {
+        List<ShipResumeResponseDTO> ships = Arrays.asList(new ShipResumeResponseDTO());
+        List<Ship> companyShips = Arrays.asList(new Ship());
+        Company company = new Company();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(repositoryShip.findByCompanyId(any())).thenReturn(companyShips);
+        Mockito.when(shipAssembler.toCollectionModelResume(companyShips)).thenReturn(ships);
+
+        List<ShipResumeResponseDTO> all = service.findAll(ID);
+
+        Assertions.assertEquals(ships, all);
+    }
+
+    @Test
     void shouldCreateCompany_success() {
         CompanyRequestDTO request = new CompanyRequestDTO();
         CompanyResponseDTO response = new CompanyResponseDTO();
@@ -77,6 +106,14 @@ class CompanyServiceTest {
         CompanyResponseDTO companyResponseDTO = service.create(request);
         assertEquals(response, companyResponseDTO);
         verify(repository).save(any());
+    }
+
+    @Test
+    void shouldCreateCompany_error() {
+        Company company = new Company();
+
+        doThrow(new DataIntegrityViolationException("test")).when(repository).save(any());
+        Assertions.assertThrows(EntityInUseException.class, () -> service.create(company));
     }
 
     @Test
@@ -116,13 +153,48 @@ class CompanyServiceTest {
     void shouldFindAllCompanies_success() {
         Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
         List<CompanyResponseDTO> companyResponseDTOs = Arrays.asList(new CompanyResponseDTO());
-        PageImpl<CompanyResponseDTO> companyResponseDTOPage = new PageImpl<>(companyResponseDTOs, pageable, companiesPage.getTotalElements());
 
         Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
         Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companyResponseDTOs);
 
-        Page<CompanyResponseDTO> all = service.findAll(pageable);
+        List<CompanyResponseDTO> all = service.findAll(pageable);
 
-        Assertions.assertEquals(companyResponseDTOPage, all);
+        Assertions.assertEquals(companyResponseDTOs, all);
+    }
+
+    @Test
+    void shouldBind_success() {
+        Company company = new Company();
+        Ship ship = new Ship();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.bind(ID, ID);
+
+        assertEquals(company.getClass(), ship.getCompany().getClass());
+    }
+
+    @Test
+    void shouldBind_error() {
+        Company company = new Company();
+        Ship ship = new Ship();
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.bind(ID, ID);
+
+        Company company1 = new Company();
+        company1.setId(3L);
+
+        Assertions.assertThrows(CompanyAlreadySelectedException.class, () -> service.bind(company1.getId(), ID));
+    }
+
+    @Test
+    void shouldUnlink_success() {
+        Ship ship = new Ship();
+
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.unlink(ship.getId());
+
+        assertNull(ship.getCompany());
     }
 }
