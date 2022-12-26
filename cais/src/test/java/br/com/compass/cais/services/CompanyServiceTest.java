@@ -2,9 +2,9 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Ship;
-import br.com.compass.cais.exceptions.CompanyAlreadySelectedException;
-import br.com.compass.cais.exceptions.CompanyNotFoundException;
-import br.com.compass.cais.exceptions.EntityInUseException;
+import br.com.compass.cais.exceptions.response.CompanyAlreadySelectedException;
+import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
+import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.repository.CompanyRepository;
 import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
