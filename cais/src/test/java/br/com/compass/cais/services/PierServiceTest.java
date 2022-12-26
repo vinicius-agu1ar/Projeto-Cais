@@ -3,7 +3,7 @@ package br.com.compass.cais.services;
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.EntityInUseException;
-import br.com.compass.cais.exceptions.PierFullException;
+import br.com.compass.cais.exceptions.response.PierFullException;
 import br.com.compass.cais.exceptions.PierNotFoundException;
 import br.com.compass.cais.repository.PierRepository;
 import br.com.compass.cais.services.assembler.PierDTOAssembler;

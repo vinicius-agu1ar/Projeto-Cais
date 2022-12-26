@@ -1,4 +1,4 @@
-package br.com.compass.cais.exceptions;
+package br.com.compass.cais.exceptions.response;
 
 import br.com.compass.cais.enums.ErrorCode;
 import lombok.Getter;
@@ -7,19 +7,17 @@ import org.springframework.http.HttpStatus;
 import java.io.Serial;
 
 @Getter
-public class PierFullException extends RuntimeException{
-
+public class CompanyAlreadySelectedException extends RuntimeException{
     @Serial
     private static final long serialVersionUID = 1L;
     private final String details;
     private final ErrorCode errorCode;
     private final HttpStatus httpStatus;
 
-
-    public PierFullException() {
-        super(ErrorCode.PIER_FULL.name());
+    public CompanyAlreadySelectedException(){
+        super(ErrorCode.COMPANY_ALREADY_LINKED.name());
         this.httpStatus = HttpStatus.BAD_REQUEST;
-        this.errorCode = ErrorCode.PIER_FULL;
-        this.details = ErrorCode.PIER_FULL.getMessage();
+        this.errorCode = ErrorCode.COMPANY_ALREADY_LINKED;
+        this.details = ErrorCode.COMPANY_ALREADY_LINKED.getMessage();
     }
 }

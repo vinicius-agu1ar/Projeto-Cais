@@ -3,9 +3,10 @@ package br.com.compass.cais.exceptions.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.compass.cais.enums.CodeErro;
 import br.com.compass.cais.enums.ErrorCode;
-import br.com.compass.cais.exceptions.*;
-import br.com.compass.cais.exceptions.response.ExceptionResponse;
+import br.com.compass.cais.exceptions.response.CompanyInUseException;
+import br.com.compass.cais.exceptions.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,14 +29,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.INVALID_PARAMETER, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.INVALID_PARAMETER, CodeErro.INVALIDO_PARAMETRO, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, CodeErro.PEDIDO_RUIM, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
@@ -49,84 +50,84 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 errors.add(String.format("%s : %s", error.getField(), error.getDefaultMessage()))
         );
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, errors);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, CodeErro.PEDIDO_RUIM, errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @Override
     protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, CodeErro.PEDIDO_RUIM, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @Override
     protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.BAD_REQUEST, CodeErro.PEDIDO_RUIM, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @ExceptionHandler(CompanyNotFoundException.class)
     public final ResponseEntity<Object> handleCompanyNotFoundException(CompanyNotFoundException ex) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_NOT_FOUND, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_NOT_FOUND, CodeErro.EMPRESA_NAO_ENCONTRADA, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
     @ExceptionHandler(PierNotFoundException.class)
     public final ResponseEntity<Object> handlePierNotFoundException(PierNotFoundException ex) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_NOT_FOUND, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_NOT_FOUND, CodeErro.CAIS_NAO_ENCONTRADO, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
     @ExceptionHandler(ShipNotFoundException.class)
     public final ResponseEntity<Object> handleShipNotFoundException(ShipNotFoundException ex) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_NOT_FOUND, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_NOT_FOUND, CodeErro.NAVIO_NAO_ENCONTRADO, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
     @ExceptionHandler(EntityInUseException.class)
     public final ResponseEntity<Object> handleEntityInUseException(Exception ex){
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.ENTITY_IS_IN_USE, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.ENTITY_IS_IN_USE, CodeErro.ENTIDADE_EM_USO, ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
     @ExceptionHandler(PierInUseException.class)
     public final ResponseEntity<Object> handlePierInUseException(PierInUseException ex){
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_IS_IN_USE, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_IS_IN_USE, CodeErro.CAIS_ESTA_EM_USO, ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
     @ExceptionHandler(CompanyInUseException.class)
     public final ResponseEntity<Object> handleCompanyInUseException(CompanyInUseException ex){
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_IS_IN_USE, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_IS_IN_USE, CodeErro.EMPRESA_EM_USO, ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
     @ExceptionHandler(PierFullException.class)
     public final ResponseEntity<Object> handlePierFullException(PierFullException ex) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_FULL, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_FULL, CodeErro.CAIS_CHEIO, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @ExceptionHandler(CompanyAlreadySelectedException.class)
     public final ResponseEntity<Object> handleCompanyAlreadySelectedException(CompanyAlreadySelectedException ex) {
         log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_ALREADY_LINKED, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_ALREADY_LINKED, CodeErro.EMPRESA_JA_LIGADA, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex) {
         log.error(ex.getMessage(), ex);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.INTERNAL_SERVER_ERROR, ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.INTERNAL_SERVER_ERROR, CodeErro.ERRO_INTERNO_SERVIDOR, ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
     }
 }
