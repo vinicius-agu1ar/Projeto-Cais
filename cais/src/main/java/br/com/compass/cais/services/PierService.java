@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,6 +46,12 @@ public class PierService {
     public PierResponseDTO findBy(Long id) {
         log.info("Chamando método findBy - Service Pier");
         Pier pier = fetchOrFail(id);
+        return assembler.toModel(pier);
+    }
+
+    public PierResponseDTO findByName(String name) {
+        log.info("Chamando método findByName - Service Pier");
+        Pier pier = fetchOrFail(name);
         return assembler.toModel(pier);
     }
 
@@ -115,4 +122,8 @@ public class PierService {
         return repository.findById(pierId).orElseThrow(PierNotFoundException::new);
     }
 
+        private Pier fetchOrFail(String pierName) {
+        log.info("Chamando método fetchOrFail - Service Pier");
+            return Optional.ofNullable(repository.findByName(pierName)).orElseThrow(PierNotFoundException::new);
+        }
 }

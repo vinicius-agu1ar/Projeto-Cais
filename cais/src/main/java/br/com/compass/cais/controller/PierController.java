@@ -29,6 +29,13 @@ public class PierController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }
 
+    @GetMapping("search/{name}")
+    public ResponseEntity<PierResponseDTO> findByName(@PathVariable("name") String name){
+        log.info("Buscando Pier por name...");
+        PierResponseDTO pierResponseDTO = service.findByName(name);
+        return ResponseEntity.status(HttpStatus.OK).body(pierResponseDTO);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PierResponseDTO> findBy(@PathVariable("id") Long id){
         log.info("Buscando Pier por id...");
