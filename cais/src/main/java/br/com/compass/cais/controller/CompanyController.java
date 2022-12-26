@@ -26,9 +26,10 @@ public class CompanyController {
     private final CompanyService service;
 
     @GetMapping
-    public ResponseEntity<List<CompanyResponseDTO>> findAll(@RequestParam(required = false, name = "Origin") Origin origin, @PageableDefault(size = 10) Pageable pagination) {
+    public ResponseEntity<List<CompanyResponseDTO>> findAll(@RequestParam(required = false, name = "Origin") Origin origin, @PageableDefault(size = 10)
+    Pageable pagination, @RequestParam(required = false, name = "name") String name) {
         log.info("Listando Companies com página de {} registros...", pagination.getPageSize());
-        List<CompanyResponseDTO> responsePage = service.verifyCompanyResponseDTO(origin,pagination);
+        List<CompanyResponseDTO> responsePage = service.verifyCompanyResponseDTO(origin,pagination,name);
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }
 
@@ -37,13 +38,6 @@ public class CompanyController {
         log.info("Buscando Company por id...");
         CompanyResponseDTO companyResponseDTO = service.findBy(id);
         return ResponseEntity.status(HttpStatus.OK ).body(companyResponseDTO);
-    }
-
-    @GetMapping("/buscar")
-    public ResponseEntity<List<CompanyResponseDTO>> findByName(@RequestParam("name") String name){
-        log.info("Buscando Company por name...");
-        List<CompanyResponseDTO> companyResponseDTO = service.findByName(name);
-        return ResponseEntity.status(HttpStatus.OK).body(companyResponseDTO);
     }
 
     @GetMapping("/{id}/ships")

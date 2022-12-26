@@ -23,7 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -61,13 +63,10 @@ public class CompanyService {
         return assembler.toModel(company);
     }
 
-    public List<CompanyResponseDTO> findByName(String name) {
+    public CompanyResponseDTO findByName(String name) {
         log.info("Chamando método findByName - Service Company");
-        List<Company> companies = repository.findByNameStartingWithIgnoreCase(name);
-        if(companies.isEmpty()){
-            throw new CompanyNotFoundException();
-        }
-        return assembler.toCollectionModel(companies);
+        Company company = fetchOrFail(name);
+        return assembler.toModel(company);
     }
 
     public CompanyResponseDTO update(Long id, CompanyRequestDTO request) {
@@ -128,13 +127,23 @@ public class CompanyService {
     }
 
     private Company fetchOrFail(Long companyId){
-        log.info("Chamando método fetchOrFailId - Service Company");
+        log.info("Chamando método fetchOrFail - Service Company");
         return repository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
     }
 
-    public List<CompanyResponseDTO> verifyCompanyResponseDTO(Origin origin, Pageable pageable) {
+    private Company fetchOrFail(String name){
+        log.info("Chamando método fetchOrFail - Service Company");
+        return Optional.ofNullable(repository.findByName(name)).orElseThrow(CompanyNotFoundException::new);
+    }
+
+    public List<CompanyResponseDTO> verifyCompanyResponseDTO(Origin origin, Pageable pageable, String name) {
         log.info("Chamando método verifyCompanyResponseDTO - Service Company");
-        if(origin == null){
+        if(name != null){
+            List<CompanyResponseDTO> list = new ArrayList<>();
+            CompanyResponseDTO byName = findByName(name);
+            list.add(byName);
+            return list;
+        }else if(origin == null){
             return findAll(pageable);
         }else{
             List<Company> companies = repository.findByOrigin(origin, pageable).getContent();
