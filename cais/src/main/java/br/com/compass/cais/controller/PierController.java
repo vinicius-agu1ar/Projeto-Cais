@@ -23,17 +23,10 @@ public class PierController {
     private final PierService service;
 
     @GetMapping
-    public ResponseEntity<List<PierResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination) {
+    public ResponseEntity<List<PierResponseDTO>> findAll(@RequestParam(required = false, name = "name") String name, @PageableDefault(size = 10) Pageable pagination) {
         log.info("Listando Pier com página de {} registros...", pagination.getPageSize());
-        List<PierResponseDTO> responsePage = service.findAll(pagination).getContent();
+        List<PierResponseDTO> responsePage = service.verifyPierResponseDTO(pagination,name);
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
-    }
-
-    @GetMapping("search/{name}")
-    public ResponseEntity<PierResponseDTO> findByName(@PathVariable("name") String name){
-        log.info("Buscando Pier por name...");
-        PierResponseDTO pierResponseDTO = service.findByName(name);
-        return ResponseEntity.status(HttpStatus.OK).body(pierResponseDTO);
     }
 
     @GetMapping("/{id}")

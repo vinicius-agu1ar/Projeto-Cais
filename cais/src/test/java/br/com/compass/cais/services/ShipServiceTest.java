@@ -1,8 +1,8 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Ship;
-import br.com.compass.cais.exceptions.EntityInUseException;
-import br.com.compass.cais.exceptions.ShipNotFoundException;
+import br.com.compass.cais.exceptions.response.EntityInUseException;
+import br.com.compass.cais.exceptions.response.ShipNotFoundException;
 import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.assembler.ShipInputDisassembler;

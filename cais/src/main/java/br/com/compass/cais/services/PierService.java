@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,6 +125,19 @@ public class PierService {
 
         private Pier fetchOrFail(String pierName) {
         log.info("Chamando método fetchOrFail - Service Pier");
-            return Optional.ofNullable(repository.findByName(pierName)).orElseThrow(PierNotFoundException::new);
+        return Optional.ofNullable(repository.findByName(pierName)).orElseThrow(PierNotFoundException::new);
         }
+
+    public List<PierResponseDTO> verifyPierResponseDTO(Pageable pageable, String name) {
+        log.info("Chamando método verifyCompanyResponseDTO - Service Company");
+        if(name != null){
+            List<PierResponseDTO> list = new ArrayList<>();
+            PierResponseDTO byName = findByName(name);
+            list.add(byName);
+            return list;
+        }else {
+            List<Pier> piers = repository.findAll(pageable).getContent();
+            return assembler.toCollectionModel(piers);
+        }
+    }
 }
