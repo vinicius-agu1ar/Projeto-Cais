@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
 
     COMPANY_NOT_FOUND("Company not found, check before making this request again"),
-    PIER_NOT_FOUND("Pier not found, check before making this request again"),
+    PIER_NOT_FOUND("Pier not found, check before making this request again | Cais não encontrado, verifique antes de fazer esta solicitação novamente"),
     SHIP_NOT_FOUND("Ship not found, check before making this request again"),
     BAD_REQUEST("Request invalid"),
     INVALID_PARAMETER("Invalid request parameter"),
