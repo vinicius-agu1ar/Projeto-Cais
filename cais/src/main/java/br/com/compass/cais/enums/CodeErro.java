@@ -10,6 +10,7 @@ public enum CodeErro {
     EMPRESA_NAO_ENCONTRADA("Empresa não encontrada, verifique antes de fazer esta solicitação novamente"),
     CAIS_NAO_ENCONTRADO("Cais não encontrado, verifique antes de fazer esta solicitação novamente"),
     NAVIO_NAO_ENCONTRADO("Navio não encontrado, verifique antes de fazer esta solicitação novamente"),
+    ESTADIA_NAO_ENCONTRADA("Estadia não encontrada, verifique antes de fazer esta solicitação novamente"),
     PEDIDO_RUIM("Requisição inválida"),
     INVALIDO_PARAMETRO("Parâmetro de solicitação inválido"),
     ERRO_INTERNO_SERVIDOR("Ocorreu um erro interno."),
