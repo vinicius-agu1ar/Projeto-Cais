@@ -167,4 +167,18 @@ class PierServiceTest {
 
         Assertions.assertEquals(pierResponseDTOPage, all);
     }
+
+    @Test
+    void shouldFindPierByName_success() {
+        Pier pier = new Pier();
+        PierResponseDTO response = new PierResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(pier);
+        Mockito.when(assembler.toModel(pier)).thenReturn(response);
+
+        PierResponseDTO pierResponseDTO = service.findByName(any());
+
+        Assertions.assertEquals(response.getName(), pierResponseDTO.getName());
+        Assertions.assertEquals(response, pierResponseDTO);
+    }
 }
