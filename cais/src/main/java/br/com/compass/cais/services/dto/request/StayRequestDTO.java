@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class StayRequestDTO {
 
-    @NotBlank
+
     private Ship ship;
-    @NotBlank
+
     private LocalDateTime entry;
-    @NotBlank
+
     private LocalDateTime exit;
-    @NotNull
+
     private BigDecimal value;
 
 
