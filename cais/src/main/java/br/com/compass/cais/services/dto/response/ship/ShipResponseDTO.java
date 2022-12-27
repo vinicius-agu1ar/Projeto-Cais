@@ -14,8 +14,4 @@ public class ShipResponseDTO {
     private String name;
 
     private Double weight;
-
-    private CompanyResponseNameOriginDTO company;
-
-    private PierResponseName pier;
 }
