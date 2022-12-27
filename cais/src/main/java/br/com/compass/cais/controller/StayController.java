@@ -45,4 +45,11 @@ public class StayController {
         StayResponseDTO stayResponseDTO = service.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(stayResponseDTO);
     }
+
+    @PostMapping("/{id}/stay/{stayId}")
+    public ResponseEntity<Void> bindStayShip(@PathVariable("id") Long id, @PathVariable("shipId") Long shipId) {
+        log.info("Vinculando um Stay a um Ship...");
+        service.bind(id,shipId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
