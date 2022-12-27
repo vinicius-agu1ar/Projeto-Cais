@@ -1,6 +1,7 @@
 package br.com.compass.cais.services.dto.response.stay;
 
-import br.com.compass.cais.entites.Ship;
+import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +12,12 @@ import java.time.LocalDateTime;
 @Setter
 public class StayResponseDTO {
 
-    private Ship ship;
+    private ShipResponseDTO ship;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDateTime entry;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDateTime exit;
 
     private BigDecimal value;
