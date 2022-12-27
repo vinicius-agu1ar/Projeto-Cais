@@ -163,6 +163,20 @@ class CompanyServiceTest {
     }
 
     @Test
+    void shouldFindCompanyByName_success() {
+        Company company = new Company();
+        CompanyResponseDTO response = new CompanyResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(company);
+        Mockito.when(assembler.toModel(company)).thenReturn(response);
+
+        CompanyResponseDTO companyResponseDTO = service.findByName(any());
+
+        Assertions.assertEquals(response.getName(), companyResponseDTO.getName());
+        Assertions.assertEquals(response, companyResponseDTO);
+    }
+
+    @Test
     void shouldBind_success() {
         Company company = new Company();
         Ship ship = new Ship();
