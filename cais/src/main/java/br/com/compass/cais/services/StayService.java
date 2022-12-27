@@ -1,9 +1,14 @@
 package br.com.compass.cais.services;
 
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
+import br.com.compass.cais.services.assembler.StayInputDisassembler;
+import br.com.compass.cais.services.dto.request.ShipRequestDTO;
+import br.com.compass.cais.services.dto.request.StayRequestDTO;
+import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,7 @@ public class StayService {
     private final StayRepository repository;
 
     private final StayDTOAssembler assembler;
+    private final StayInputDisassembler disassembler;
 
     @Transactional
     public Stay create(Stay stay) {
@@ -63,7 +69,18 @@ public class StayService {
     }
 
     public Stay fetchOrFail(Long stayId){
-        log.info("Chamando método fetchOrFail - Service Ship");
+        log.info("Chamando método fetchOrFail - Service Stay");
         return repository.findById(stayId).orElseThrow(StayNotFoundException::new);
     }
+
+    @Transactional
+    public StayResponseDTO update(Long id, StayRequestDTO request) {
+        log.info("Chamando método update - Service Stay");
+        Stay stay = fetchOrFail(id);
+        disassembler.copyToDomainObject(request,stay);
+        stay = create(stay);
+        return assembler.toModel(stay);
+    }
+
+
 }
