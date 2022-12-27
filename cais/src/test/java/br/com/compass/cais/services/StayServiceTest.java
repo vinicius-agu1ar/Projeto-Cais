@@ -6,13 +6,19 @@ import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +38,8 @@ public class StayServiceTest {
     private StayDTOAssembler assembler;
     @Mock
     private StayInputDisassembler disassembler;
+    @Mock
+    private Pageable pageable;
 
     @Test
     void shouldUpdateStay_success() {
@@ -46,5 +54,33 @@ public class StayServiceTest {
         StayResponseDTO stayResponseDTO = service.update(ID,request);
         assertEquals(response, stayResponseDTO);
         verify(repository).save(any());
+    }
+
+    @Test
+    void shouldFindAllStays_success() {
+        Page<Stay> staysPage = new PageImpl<>(List.of(new Stay()));
+        List<StayResponseDTO> stayResponseDTOS = Arrays.asList(new StayResponseDTO());
+        PageImpl<StayResponseDTO> stayResponseDTOPage = new PageImpl<>(stayResponseDTOS, pageable, staysPage.getTotalElements());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(staysPage);
+        Mockito.when(assembler.toCollectionModel(staysPage.getContent())).thenReturn(stayResponseDTOS);
+
+        Page<StayResponseDTO> all = service.findAll(pageable);
+
+        Assertions.assertEquals(stayResponseDTOPage, all);
+    }
+
+    @Test
+    void shouldFindStayById_success() {
+        Stay stay = new Stay();
+        StayResponseDTO response = new StayResponseDTO();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(stay));
+        Mockito.when(assembler.toModel(stay)).thenReturn(response);
+
+        StayResponseDTO pierResponseDTO = service.findBy(ID);
+
+        Assertions.assertEquals(response.getClass(), pierResponseDTO.getClass());
+        Assertions.assertEquals(response, pierResponseDTO);
     }
 }

@@ -155,13 +155,13 @@ class PierServiceTest {
     }
 
     @Test
-    void shouldFindAllCompanies_success() {
-        Page<Pier> companiesPage = new PageImpl<>(List.of(new Pier()));
+    void shouldFindAllPiers_success() {
+        Page<Pier> piersPage = new PageImpl<>(List.of(new Pier()));
         List<PierResponseDTO> pierResponseDTOs = Arrays.asList(new PierResponseDTO());
-        PageImpl<PierResponseDTO> pierResponseDTOPage = new PageImpl<>(pierResponseDTOs, pageable, companiesPage.getTotalElements());
+        PageImpl<PierResponseDTO> pierResponseDTOPage = new PageImpl<>(pierResponseDTOs, pageable, piersPage.getTotalElements());
 
-        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
-        Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(pierResponseDTOs);
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(piersPage);
+        Mockito.when(assembler.toCollectionModel(piersPage.getContent())).thenReturn(pierResponseDTOs);
 
         Page<PierResponseDTO> all = service.findAll(pageable);
 
