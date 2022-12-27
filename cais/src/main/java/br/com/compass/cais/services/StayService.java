@@ -1,17 +1,21 @@
 package br.com.compass.cais.services;
 
-import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.repository.StayRepository;
+import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,6 +23,8 @@ import java.time.temporal.ChronoUnit;
 public class StayService {
 
     private final StayRepository repository;
+
+    private final StayDTOAssembler assembler;
 
     @Transactional
     public Stay create(Stay stay) {
@@ -42,4 +48,10 @@ public class StayService {
         return dailyResult.add(weightResult).setScale(2, RoundingMode.HALF_UP);
     }
 
+    public Page<StayResponseDTO> findAll(Pageable pageable) {
+
+        Page<Stay> pageStay = repository.findAll(pageable);
+        List<StayResponseDTO> stayResponseDTOS = assembler.toCollectionModel(pageStay.getContent());
+        return new PageImpl<>(stayResponseDTOS, pageable, pageStay.getTotalElements());
+    }
 }
