@@ -1,6 +1,7 @@
 package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Stay;
+import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
@@ -49,9 +50,20 @@ public class StayService {
     }
 
     public Page<StayResponseDTO> findAll(Pageable pageable) {
-
+        log.info("Chamando método findAll - Service Stay");
         Page<Stay> pageStay = repository.findAll(pageable);
         List<StayResponseDTO> stayResponseDTOS = assembler.toCollectionModel(pageStay.getContent());
         return new PageImpl<>(stayResponseDTOS, pageable, pageStay.getTotalElements());
+    }
+
+    public StayResponseDTO findBy(Long id) {
+        log.info("Chamando método findBy - Service Stay");
+        Stay stay = fetchOrFail(id);
+        return assembler.toModel(stay);
+    }
+
+    public Stay fetchOrFail(Long stayId){
+        log.info("Chamando método fetchOrFail - Service Ship");
+        return repository.findById(stayId).orElseThrow(StayNotFoundException::new);
     }
 }
