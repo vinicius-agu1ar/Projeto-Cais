@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class StayService {
 
     private final StayDTOAssembler assembler;
     private final StayInputDisassembler disassembler;
+    private final ShipService shipService;
 
     @Transactional
     public Stay create(Stay stay) {
@@ -80,6 +82,17 @@ public class StayService {
         disassembler.copyToDomainObject(request,stay);
         stay = create(stay);
         return assembler.toModel(stay);
+    }
+
+    @Transactional
+    public void bind(Long id, Long shipId){
+        log.info("Chamando método bind - Service Stay");
+        Ship ship = shipService.fetchOrFail(shipId);
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setEntry(LocalDateTime.now());
+
+        create(stay);
     }
 
 
