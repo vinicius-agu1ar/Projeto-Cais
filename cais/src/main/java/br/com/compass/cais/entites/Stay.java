@@ -18,7 +18,7 @@ public class Stay {
     @Column(name = "ID")
     private Long id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "SHIP_ID")
     private Ship ship;
 
