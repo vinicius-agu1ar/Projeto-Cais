@@ -18,7 +18,8 @@ public enum ErrorCode {
     COMPANY_IS_IN_USE ("Company cannot be removed as it is in use"),
     COMPANY_ALREADY_LINKED("A company is already linked to this ship, please unlink first"),
     PIER_IS_IN_USE ("Pier is in use, please check before performing this action again"),
-    PIER_FULL("Pier is full, try to change the pier");
+    PIER_FULL("Pier is full, try to change the pier"),
+    SHIP_NOT_COMPATIBLE("The Ship has no connection with the company, Pier or with either");
 
 
     private final String message;
