@@ -2,13 +2,12 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
+import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
 import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
-import br.com.compass.cais.services.dto.request.ShipRequestDTO;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
-import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +80,9 @@ public class StayService {
     public StayResponseDTO bind(Long id){
         log.info("Chamando método bind - Service Stay");
         Ship ship = shipService.fetchOrFail(id);
+        if(ship.getCompany() == null || ship.getPier() == null){
+            throw new ShipNotCompatibleException();
+        }
         Stay stay = new Stay();
         stay.setShip(ship);
         stay.setEntry(LocalDateTime.now());
