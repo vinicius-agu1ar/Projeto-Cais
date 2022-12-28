@@ -71,7 +71,7 @@ public class StayService {
         return assembler.toModel(stay);
     }
 
-    private Stay fetchOrFail(Long stayId){
+    public Stay fetchOrFail(Long stayId){
         log.info("Chamando método fetchOrFail - Service Stay");
         return repository.findById(stayId).orElseThrow(StayNotFoundException::new);
     }
@@ -99,5 +99,12 @@ public class StayService {
         return assembler.toModel(stay);
     }
 
-
+    @Transactional
+    public StayResponseDTO exit(Long id) {
+        log.info("Chamando método exit - Service Stay");
+        Stay stay = fetchOrFail(id);
+        stay.setExitShip(LocalDateTime.now());
+        stay.setFinalPrice(calculate(stay));
+        return assembler.toModel(stay);
+    }
 }
