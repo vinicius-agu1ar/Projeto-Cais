@@ -18,7 +18,8 @@ public enum CodeErro {
     EMPRESA_EM_USO("A empresa não pode ser removida porque está em uso"),
     EMPRESA_JA_LIGADA("Uma empresa já está vinculada a este navio, desvincule primeiro"),
     CAIS_ESTA_EM_USO("O cais está em uso, verifique antes de executar esta ação novamente"),
-    CAIS_CHEIO("O cais está cheio, tente mudar o cais");
+    CAIS_CHEIO("O cais está cheio, tente mudar o cais"),
+    NAVIO_NAO_COMPATIVEL("O Navio não possui vinculo com Empresa, Pier ou com nenhum dos dois");
 
     private final String menssagem;
 }
