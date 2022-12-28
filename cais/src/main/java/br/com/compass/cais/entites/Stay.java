@@ -25,9 +25,9 @@ public class Stay {
     @Column(name = "ENTRY")
     private LocalDateTime entry;
 
-    @Column(name = "EXIT")
-    private LocalDateTime exit;
+    @Column(name = "EXIT_SHIP")
+    private LocalDateTime exitShip;
 
-    @Column(name = "VALUE")
-    private BigDecimal value;
+    @Column(name = "FINAL_PRICE")
+    private BigDecimal finalPrice;
 }

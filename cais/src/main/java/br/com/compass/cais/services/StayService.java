@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -33,20 +34,23 @@ public class StayService {
     private final StayDTOAssembler assembler;
     private final StayInputDisassembler disassembler;
 
+    private final ShipService shipService;
+
     @Transactional
     public Stay create(Stay stay) {
+        log.info("Chamando método create (Salvando no banco) - Service Stay");
         return repository.save(stay);
     }
 
     public BigDecimal calculate(Stay stay){
-
+        log.info("Chamando método calculate - Service Stay");
         String DAILY = "200";
         String PERCENT = "0.1";
 
         BigDecimal valueDaily = new BigDecimal(DAILY);
         BigDecimal valueWeight = new BigDecimal(PERCENT);
 
-        long timeDocked = stay.getEntry().until(stay.getExit(), ChronoUnit.DAYS);
+        long timeDocked = stay.getEntry().until(stay.getExitShip(), ChronoUnit.DAYS);
 
         BigDecimal dailyResult = valueDaily.multiply(new BigDecimal(timeDocked));
 
@@ -68,9 +72,20 @@ public class StayService {
         return assembler.toModel(stay);
     }
 
-    public Stay fetchOrFail(Long stayId){
+    private Stay fetchOrFail(Long stayId){
         log.info("Chamando método fetchOrFail - Service Stay");
         return repository.findById(stayId).orElseThrow(StayNotFoundException::new);
+    }
+
+    @Transactional
+    public StayResponseDTO bind(Long id){
+        log.info("Chamando método bind - Service Stay");
+        Ship ship = shipService.fetchOrFail(id);
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setEntry(LocalDateTime.now());
+        Stay newStay = create(stay);
+        return assembler.toModel(newStay);
     }
 
     @Transactional

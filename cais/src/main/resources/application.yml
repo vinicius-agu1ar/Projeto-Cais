@@ -6,4 +6,4 @@ spring:
     password: Compass123
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: false
+    show-sql: true
