@@ -6,9 +6,7 @@ import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
-import br.com.compass.cais.services.dto.request.ShipRequestDTO;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
-import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +70,7 @@ public class StayService {
         return assembler.toModel(stay);
     }
 
-    private Stay fetchOrFail(Long stayId){
+    public Stay fetchOrFail(Long stayId){
         log.info("Chamando método fetchOrFail - Service Stay");
         return repository.findById(stayId).orElseThrow(StayNotFoundException::new);
     }
@@ -97,5 +95,12 @@ public class StayService {
         return assembler.toModel(stay);
     }
 
-
+    @Transactional
+    public StayResponseDTO exit(Long id) {
+        log.info("Chamando método exit - Service Stay");
+        Stay stay = fetchOrFail(id);
+        stay.setExitShip(LocalDateTime.now());
+        stay.setFinalPrice(calculate(stay));
+        return assembler.toModel(stay);
+    }
 }

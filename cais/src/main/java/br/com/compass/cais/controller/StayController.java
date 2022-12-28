@@ -1,9 +1,7 @@
 package br.com.compass.cais.controller;
 
 import br.com.compass.cais.services.StayService;
-import br.com.compass.cais.services.dto.request.PierRequestDTO;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
-import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,5 +49,12 @@ public class StayController {
         log.info("Vinculando Stay com Ship...");
         StayResponseDTO bind = service.bind(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(bind);
+    }
+
+    @PostMapping("/{id}/ship")
+    public ResponseEntity<StayResponseDTO> exit(@PathVariable("id") Long id) {
+        log.info("desvinculando uma Stay a um Ship...");
+        StayResponseDTO exit = service.exit(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(exit);
     }
 }
