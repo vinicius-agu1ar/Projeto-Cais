@@ -57,4 +57,10 @@ public class StayController {
         StayResponseDTO exit = service.exit(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(exit);
     }
+    @GetMapping("/ship/{id}")
+    public ResponseEntity<List<StayResponseDTO>> shipStaysBy(@PathVariable("id") Long id) {
+        log.info("Listando Stays de um Ship pelo seu ID");
+        List<StayResponseDTO> stayResponseDTO = service.shipStays(id);
+        return ResponseEntity.status(HttpStatus.OK).body(stayResponseDTO);
+    }
 }
