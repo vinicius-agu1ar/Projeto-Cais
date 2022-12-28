@@ -1,5 +1,6 @@
 package br.com.compass.cais.entites;
 
+import br.com.compass.cais.enums.Status;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,4 +31,8 @@ public class Stay {
 
     @Column(name = "FINAL_PRICE")
     private BigDecimal finalPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS")
+    private Status status;
 }

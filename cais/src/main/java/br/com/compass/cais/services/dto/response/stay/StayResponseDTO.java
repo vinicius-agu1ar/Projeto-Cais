@@ -1,8 +1,8 @@
 package br.com.compass.cais.services.dto.response.stay;
 
+import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.services.dto.response.ship.ShipResumeStayDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +23,7 @@ public class StayResponseDTO {
     private LocalDateTime exitShip;
 
     private BigDecimal finalPrice;
+
+    private Status status;
 
 }
