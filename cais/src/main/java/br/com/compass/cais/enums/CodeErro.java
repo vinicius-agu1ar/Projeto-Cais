@@ -19,7 +19,8 @@ public enum CodeErro {
     EMPRESA_JA_LIGADA("Uma empresa já está vinculada a este navio, desvincule primeiro"),
     CAIS_ESTA_EM_USO("O cais está em uso, verifique antes de executar esta ação novamente"),
     CAIS_CHEIO("O cais está cheio, tente mudar o cais"),
-    NAVIO_NAO_COMPATIVEL("O Navio não possui vinculo com Empresa, Pier ou com nenhum dos dois");
+    NAVIO_NAO_COMPATIVEL("O Navio não possui vinculo com Empresa, Pier ou com nenhum dos dois"),
+    NAVIO_ABERTO_EM_ESTADIA("Navio aberto em estadia, o navio não pode ter o status aberto em uma estadia");
 
     private final String menssagem;
 }

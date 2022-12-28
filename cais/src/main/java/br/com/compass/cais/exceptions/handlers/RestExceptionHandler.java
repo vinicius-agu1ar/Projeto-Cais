@@ -130,6 +130,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_NOT_COMPATIBLE, CodeErro.NAVIO_NAO_COMPATIVEL, ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
+    @ExceptionHandler(ShipOpenInStayException.class)
+    public final ResponseEntity<Object> handleShipOpenInStayException(ShipOpenInStayException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_OPEN_IN_STAY, CodeErro.NAVIO_ABERTO_EM_ESTADIA, ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
+    }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex) {

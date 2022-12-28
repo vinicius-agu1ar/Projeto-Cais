@@ -2,7 +2,10 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
+import br.com.compass.cais.enums.Status;
+import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
+import br.com.compass.cais.exceptions.response.ShipOpenInStayException;
 import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
@@ -43,15 +46,13 @@ public class StayService {
 
     public BigDecimal calculate(Stay stay){
         log.info("Chamando método calculate - Service Stay");
-        String DAILY = "200";
-        String PERCENT = "0.1";
 
-        BigDecimal valueDaily = new BigDecimal(DAILY);
-        BigDecimal valueWeight = new BigDecimal(PERCENT);
+        BigDecimal valueDaily = new BigDecimal("200");
+        BigDecimal valueWeight = new BigDecimal("0.1");
 
         long timeDocked = stay.getEntry().until(stay.getExitShip(), ChronoUnit.DAYS);
 
-        BigDecimal dailyResult = valueDaily.multiply(new BigDecimal(timeDocked));
+        BigDecimal dailyResult = valueDaily.multiply(new BigDecimal(timeDocked + 1L));
 
         BigDecimal weightResult = valueWeight.multiply(BigDecimal.valueOf(stay.getShip().getWeight()));
 
@@ -80,12 +81,12 @@ public class StayService {
     public StayResponseDTO bind(Long id){
         log.info("Chamando método bind - Service Stay");
         Ship ship = shipService.fetchOrFail(id);
-        if(ship.getCompany() == null || ship.getPier() == null){
-            throw new ShipNotCompatibleException();
-        }
+
+        verifyExistsStayWithShipWithStatusOpen(id, ship);
         Stay stay = new Stay();
         stay.setShip(ship);
         stay.setEntry(LocalDateTime.now());
+        stay.setStatus(Status.OPEN);
         Stay newStay = create(stay);
         return assembler.toModel(newStay);
     }
@@ -105,6 +106,18 @@ public class StayService {
         Stay stay = fetchOrFail(id);
         stay.setExitShip(LocalDateTime.now());
         stay.setFinalPrice(calculate(stay));
+        stay.setStatus(Status.CLOSE);
         return assembler.toModel(stay);
+    }
+
+    private void verifyExistsStayWithShipWithStatusOpen(Long id, Ship ship) {
+        log.info("Chamando método verifyExistsStayWithShipWithStatusOpen - Service Stay");
+        List<Stay> byShipIdAndStatus = repository.findByShipIdAndStatus(id, Status.OPEN);
+        if(!byShipIdAndStatus.isEmpty()){
+            throw new ShipOpenInStayException();
+        }
+        if(ship.getCompany() == null || ship.getPier() == null){
+            throw new ShipNotCompatibleException();
+        }
     }
 }
