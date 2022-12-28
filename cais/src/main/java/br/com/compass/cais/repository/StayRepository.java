@@ -11,5 +11,5 @@ public interface StayRepository extends JpaRepository<Stay, Long> {
 
     Stay findByEntry (LocalDateTime entry);
 
-    Stay findByExit (LocalDateTime exit);
+    Stay findByExitShip (LocalDateTime exitShip);
 }

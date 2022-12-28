@@ -1,6 +1,8 @@
 package br.com.compass.cais.services.dto.response.stay;
 
 import br.com.compass.cais.services.dto.response.ship.ShipResumeStayDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +17,11 @@ public class StayResponseDTO {
 
     private ShipResumeStayDTO ship;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime entry;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime exitShip;
 
-    private LocalDateTime exit;
-
-    private BigDecimal value;
+    private BigDecimal finalPrice;
 
 }

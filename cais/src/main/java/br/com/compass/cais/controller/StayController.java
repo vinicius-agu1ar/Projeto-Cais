@@ -46,10 +46,10 @@ public class StayController {
         return ResponseEntity.status(HttpStatus.OK).body(stayResponseDTO);
     }
 
-    @PostMapping("/{id}/stay/{stayId}")
-    public ResponseEntity<Void> bindStayShip(@PathVariable("id") Long id, @PathVariable("shipId") Long shipId) {
-        log.info("Vinculando um Stay a um Ship...");
-        service.bind(id,shipId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @PostMapping("/bind/ship/{id}")
+    public ResponseEntity<StayResponseDTO> bind(@PathVariable("id") Long id){
+        log.info("Vinculando Stay com Ship...");
+        StayResponseDTO bind = service.bind(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bind);
     }
 }
