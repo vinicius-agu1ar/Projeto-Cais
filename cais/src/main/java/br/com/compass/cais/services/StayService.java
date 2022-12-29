@@ -127,4 +127,14 @@ public class StayService {
         List<Stay> shipStay = repository.findByShipId(id);
         return assembler.toCollectionModel(shipStay);
     }
+
+    public List<StayResponseDTO> verifyStayResponseDTO (Pageable pageable, Status status){
+        log.info("");
+        if (status == null){
+            return findAll(pageable).toList();
+        }else {
+            List<Stay> stays = repository.findByStatus(pageable, status).getContent();
+            return assembler.toCollectionModel(stays);
+        }
+    }
 }

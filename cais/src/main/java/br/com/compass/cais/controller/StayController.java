@@ -1,5 +1,6 @@
 package br.com.compass.cais.controller;
 
+import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.services.StayService;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
@@ -23,9 +24,9 @@ public class StayController {
     private final StayService service;
 
     @GetMapping
-    public ResponseEntity<List<StayResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination) {
+    public ResponseEntity<List<StayResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination, @RequestParam(required = false, name = "Status") Status status) {
         log.info("Listando Stays com página de {} registros...", pagination.getPageSize());
-        List<StayResponseDTO> responsePage = service.findAll(pagination).getContent();
+        List<StayResponseDTO> responsePage = service.verifyStayResponseDTO(pagination,status);
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }
 
