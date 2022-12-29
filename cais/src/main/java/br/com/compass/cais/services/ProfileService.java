@@ -2,8 +2,8 @@ package br.com.compass.cais.services;
 
 
 import br.com.compass.cais.entites.Profile;
-import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.response.EntityInUseException;
+import br.com.compass.cais.exceptions.response.ProfileNotFoundException;
 import br.com.compass.cais.repository.ProfileRepository;
 import br.com.compass.cais.services.assembler.ProfileDTOAssembler;
 import br.com.compass.cais.services.assembler.ProfileInputDisassembler;
@@ -55,7 +55,7 @@ public class ProfileService {
             repository.deleteById(profileId);
             repository.flush();
         }catch (EmptyResultDataAccessException e) {
-            throw new CompanyNotFoundException();
+            throw new ProfileNotFoundException();
         }catch (DataIntegrityViolationException e) {
             throw new EntityInUseException();
         }
