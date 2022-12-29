@@ -54,6 +54,7 @@ paths:
               example: {
                 "code": "ENTITY_IS_IN_USE",
                 "message": "Entity is in use, please check before performing this action again",
+                "mensagem": "A entidade está em uso, verifique antes de executar esta ação novamente",
                 "details": [
                   "ENTITY_IS_IN_USE"
                 ]
@@ -176,6 +177,7 @@ paths:
               example: {
                 "code": "PIER_IS_IN_USE",
                 "message": "Pier is in use, please check before performing this action again",
+                "mensagem": "Pier está em uso, verifique antes de executar esta ação novamente",
                 "details": [
                   "PIER_IS_IN_USE"
                 ]
@@ -215,6 +217,7 @@ paths:
               example: {
                 "code": "PIER_FULL",
                 "message": "Pier is full, try to change the pier",
+                "mensagem": "O cais está cheio, tente mudar o cais",
                 "details": [
                   "PIER_FULL"
                 ]
@@ -309,6 +312,7 @@ paths:
               example: {
                 "code": "ENTITY_IS_IN_USE",
                 "message": "Entity is in use, please check before performing this action again",
+                "mensagem": "A entidade está em uso, verifique antes de executar esta ação novamente",
                 "details": [
                   "ENTITY_IS_IN_USE"
                 ]
@@ -365,13 +369,8 @@ paths:
           description: Not Found
           content:
             application/json:
-              example: {
-                "code": "COMPANY_NOT_FOUND",
-                "message": "Company not found, check before making this request again",
-                "details": [
-                  "COMPANY_NOT_FOUND"
-                ]
-              }
+              schema:
+                $ref: '#/components/schemas/CompanyNotFound'
         400:
           description: "Bad Request"
           content:
@@ -408,6 +407,7 @@ paths:
               example: {
                 "code": "COMPANY_IS_IN_USE",
                 "message": "Company is in use, please check before performing this action again",
+                "mensagem":"A empresa está em uso, verifique antes de executar esta ação novamente",
                 "details": [
                   "COMPANY_IS_IN_USE"
                 ]
@@ -557,6 +557,7 @@ paths:
               example: {
                 "code": "ENTITY_IS_IN_USE",
                 "message": "Entity is in use, please check before performing this action again",
+                "mensagem": "A entidade está em uso, verifique antes de executar esta ação novamente",
                 "details": [
                   "ENTITY_IS_IN_USE"
                 ]
@@ -996,6 +997,9 @@ components:
         message:
           type: string
           example: A company is already linked to this ship, please unlink first
+        mensagem:
+          type: string
+          example: Uma empresa já está vinculada a este navio, desvincule primeiro
         details:
           type: array
           items:
@@ -1010,6 +1014,9 @@ components:
         message:
           type: string
           example: Ship not found, check before making this request again
+        mensagem:
+          type: string
+          example: Navio não encontrado, verifique antes de fazer esta solicitação novamente
         details:
           type: array
           items:
@@ -1024,6 +1031,9 @@ components:
         message:
           type: string
           example: Company not found, check before making this request again
+        mensagem:
+          type: string
+          example: Empresa não encontrada, verifique antes de fazer esta solicitação novamente
         details:
           type: array
           items:
@@ -1112,6 +1122,9 @@ components:
         message:
           type: string
           example: Pier not found, check before making this request again
+        mensagem:
+          type: string
+          example: Cais não encontrado, verifique antes de fazer esta solicitação novamente
         details:
           type: array
           items:
