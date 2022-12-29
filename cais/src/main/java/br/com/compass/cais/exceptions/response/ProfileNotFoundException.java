@@ -2,10 +2,11 @@ package br.com.compass.cais.exceptions.response;
 
 import br.com.compass.cais.enums.CodeErro;
 import br.com.compass.cais.enums.ErrorCode;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
-
+@Getter
 public class ProfileNotFoundException extends RuntimeException{
 
     @Serial
