@@ -51,7 +51,7 @@ public class StayController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bind);
     }
 
-    @PostMapping("/{id}/ship")
+    @PostMapping("/exit/{id}")
     public ResponseEntity<StayResponseDTO> exit(@PathVariable("id") Long id) {
         log.info("desvinculando uma Stay a um Ship...");
         StayResponseDTO exit = service.exit(id);

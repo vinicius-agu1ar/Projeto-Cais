@@ -395,13 +395,23 @@ paths:
           description: "No Content"
         400:
           description: Bad Request
-
         404:
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompanyNotFound'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "COMPANY_IS_IN_USE",
+                "message": "Company is in use, please check before performing this action again",
+                "details": [
+                  "COMPANY_IS_IN_USE"
+                ]
+              }
         5XX:
           description: "Erro no servidor, tente mais tarde!"
   /api/company/{id}/ships:
@@ -659,6 +669,9 @@ components:
           example: null
     ShipRequestDTO:
       type: object
+      required:
+        - name
+        - weight
       properties:
         name:
           type: string
@@ -837,3 +850,8 @@ components:
           type: array
           items:
             type: string
+            enum:
+              - idAsc
+              - idDesc
+              - nameAsc
+              - nameDesc
