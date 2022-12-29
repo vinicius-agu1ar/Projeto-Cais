@@ -5,7 +5,10 @@ import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.StayService;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
+import br.com.compass.cais.services.dto.request.ShipResumeRequestStay;
+import br.com.compass.cais.services.dto.request.StayRequestDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
+import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,22 +53,22 @@ public class StayControllerTest {
     @Autowired
     private MockMvc mvc;
 
-//    @Test
-//    void update() throws Exception {
-//        StayRequestDTO request = getStayRequestDTO();
-//        String input = TestUtils.mapToJson(request);
-//
-//        MvcResult result = mvc
-//                .perform(MockMvcRequestBuilders.put(ID_URL)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .content(input)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andReturn();
-//
-//        MockHttpServletResponse response = result.getResponse();
-//
-//        assertEquals(HttpStatus.OK.value(), response.getStatus());
-//    }
+    @Test
+    void update() throws Exception {
+        StayRequestDTO request = getStayRequestDTO();
+        String input = TestUtils.mapToJson(request);
+
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.put(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 
     @Test
     void findAll() throws Exception {
@@ -116,10 +120,12 @@ public class StayControllerTest {
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
-//    private StayRequestDTO getStayRequestDTO() {
-//        return StayRequestDTO.builder()
-//                .entry(null)
-//                .exit(null)
-//                .build();
-//    }
+    private StayRequestDTO getStayRequestDTO() {
+        ShipResumeRequestStay ship = new ShipResumeRequestStay();
+        ship.setWeight(1.0);
+        return StayRequestDTO.builder()
+                .ship(ship)
+                .finalPrice(BigDecimal.valueOf(1.0))
+                .build();
+    }
 }
