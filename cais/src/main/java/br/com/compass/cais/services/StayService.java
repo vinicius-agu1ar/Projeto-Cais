@@ -5,6 +5,7 @@ import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
 import br.com.compass.cais.exceptions.response.ShipOpenInStayException;
+import br.com.compass.cais.exceptions.response.StayCloseException;
 import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
@@ -31,10 +32,8 @@ import java.util.List;
 public class StayService {
 
     private final StayRepository repository;
-
     private final StayDTOAssembler assembler;
     private final StayInputDisassembler disassembler;
-
     private final ShipService shipService;
 
     @Transactional
@@ -103,6 +102,9 @@ public class StayService {
     public StayResponseDTO exit(Long id) {
         log.info("Chamando método exit - Service Stay");
         Stay stay = fetchOrFail(id);
+        if(stay.getExitShip() != null){
+            throw new StayCloseException();
+        }
         stay.setExitShip(LocalDateTime.now());
         stay.setFinalPrice(calculate(stay));
         stay.setStatus(Status.CLOSE);
@@ -119,7 +121,6 @@ public class StayService {
             throw new ShipNotCompatibleException();
         }
     }
-
 
     public List<StayResponseDTO> shipStays(Long id) {
         log.info("Chamando método shipStays - Service Stay");
