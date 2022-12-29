@@ -1,6 +1,10 @@
 package br.com.compass.cais.services;
 
+import br.com.compass.cais.entites.Company;
+import br.com.compass.cais.entites.Pier;
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
+import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +45,8 @@ public class StayServiceTest {
     private StayInputDisassembler disassembler;
     @Mock
     private Pageable pageable;
+    @Mock
+    private ShipService shipService;
 
     @Test
     void shouldUpdateStay_success() {
@@ -82,5 +89,32 @@ public class StayServiceTest {
 
         Assertions.assertEquals(response.getClass(), pierResponseDTO.getClass());
         Assertions.assertEquals(response, pierResponseDTO);
+    }
+
+    @Test
+    void shoudBindStayShip_success(){
+        Ship ship = new Ship();
+        ship.setPier(new Pier());
+        ship.setCompany(new Company());
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setEntry(LocalDateTime.now());
+
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        service.bind(ID);
+        assertEquals(ship.getClass(), stay.getShip().getClass());
+    }
+
+    @Test
+    void shouldBindStayShip_fail(){
+        Ship ship = new Ship();
+        ship.setPier(null);
+        ship.setCompany(null);
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setEntry(LocalDateTime.now());
+
+        Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
+        Assertions.assertThrows(ShipNotCompatibleException.class, () -> service.bind(ID));
     }
 }

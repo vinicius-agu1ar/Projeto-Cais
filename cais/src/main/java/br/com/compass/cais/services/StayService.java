@@ -3,7 +3,6 @@ package br.com.compass.cais.services;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.enums.Status;
-import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
 import br.com.compass.cais.exceptions.response.ShipOpenInStayException;
 import br.com.compass.cais.exceptions.response.StayNotFoundException;
@@ -72,9 +71,9 @@ public class StayService {
         return assembler.toModel(stay);
     }
 
-    public Stay fetchOrFail(Long stayId){
+    public Stay fetchOrFail(Long id){
         log.info("Chamando método fetchOrFail - Service Stay");
-        return repository.findById(stayId).orElseThrow(StayNotFoundException::new);
+        return repository.findById(id).orElseThrow(StayNotFoundException::new);
     }
 
     @Transactional
@@ -119,5 +118,12 @@ public class StayService {
         if(ship.getCompany() == null || ship.getPier() == null){
             throw new ShipNotCompatibleException();
         }
+    }
+
+
+    public List<StayResponseDTO> shipStays(Long id) {
+        log.info("Chamando método shipStays - Service Stay");
+        List<Stay> shipStay = repository.findByShipId(id);
+        return assembler.toCollectionModel(shipStay);
     }
 }

@@ -36,6 +36,8 @@ public class StayControllerTest {
 
     public static final String BASE_URL = "/api/stay";
     public static final String ID_URL = BASE_URL + "/1";
+    public static final String ID_URL_BIND = BASE_URL + "/bind/ship/1";
+    public static final String ID_URL_EXIT = BASE_URL + "/1/ship";
     public static final Long ID = 1L;
 
     @MockBean
@@ -89,6 +91,31 @@ public class StayControllerTest {
                 .andReturn();
         MockHttpServletResponse response = result.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void bind() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
+    @Test
+    void exit() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(ID_URL_EXIT)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
     private StayRequestDTO getStayRequestDTO() {
