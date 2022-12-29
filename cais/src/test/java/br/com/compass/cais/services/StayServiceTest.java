@@ -5,7 +5,6 @@ import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
-import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
@@ -118,12 +117,4 @@ public class StayServiceTest {
         Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
         Assertions.assertThrows(ShipNotCompatibleException.class, () -> service.bind(ID));
     }
-
-    @Test
-    void shouldExitStayShip_fail(){
-        Stay stay = new Stay();
-        stay.setShip(null);
-
-        Assertions.assertThrows(StayNotFoundException.class, () -> service.exit(ID));
-        }
 }

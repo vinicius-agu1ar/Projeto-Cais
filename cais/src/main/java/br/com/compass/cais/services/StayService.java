@@ -103,9 +103,6 @@ public class StayService {
     public StayResponseDTO exit(Long id) {
         log.info("Chamando método exit - Service Stay");
         Stay stay = fetchOrFail(id);
-        if(stay.getShip() == null){
-            throw new StayNotFoundException();
-        }
         stay.setExitShip(LocalDateTime.now());
         stay.setFinalPrice(calculate(stay));
         stay.setStatus(Status.CLOSE);
