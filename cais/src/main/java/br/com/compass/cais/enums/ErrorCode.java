@@ -20,7 +20,8 @@ public enum ErrorCode {
     PIER_IS_IN_USE ("Pier is in use, please check before performing this action again"),
     PIER_FULL("Pier is full, try to change the pier"),
     SHIP_NOT_COMPATIBLE("The Ship has no connection with the company, Pier or with either"),
-    SHIP_OPEN_IN_STAY("Open ship in stay, the ship cannot have open status in a stay");
+    SHIP_OPEN_IN_STAY("Open ship in stay, the ship cannot have open status in a stay"),
+    STAY_IS_ALREADY_CLOSED("The stay is already closed, you cannot close a stay that has already been closed");
 
 
     private final String message;

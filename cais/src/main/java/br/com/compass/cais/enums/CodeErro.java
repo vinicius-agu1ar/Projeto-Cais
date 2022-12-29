@@ -20,7 +20,8 @@ public enum CodeErro {
     CAIS_ESTA_EM_USO("O cais está em uso, verifique antes de executar esta ação novamente"),
     CAIS_CHEIO("O cais está cheio, tente mudar o cais"),
     NAVIO_NAO_COMPATIVEL("O Navio não possui vinculo com Empresa, Pier ou com nenhum dos dois"),
-    NAVIO_ABERTO_EM_ESTADIA("Navio aberto em estadia, o navio não pode ter o status aberto em uma estadia");
+    NAVIO_ABERTO_EM_ESTADIA("Navio aberto em estadia, o navio não pode ter o status aberto em uma estadia"),
+    ESTADIA_JA_ESTA_FECHADA("A Estadia já está fechada, não pode fechar uma Estadia que já foi fechada");
 
     private final String menssagem;
 }
