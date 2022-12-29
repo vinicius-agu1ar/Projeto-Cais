@@ -5,6 +5,7 @@ import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
+import br.com.compass.cais.exceptions.response.StayCloseException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -116,5 +118,51 @@ public class StayServiceTest {
 
         Mockito.when(shipService.fetchOrFail(any())).thenReturn(ship);
         Assertions.assertThrows(ShipNotCompatibleException.class, () -> service.bind(ID));
+    }
+
+    @Test
+    void shouldCalculate_success(){
+        Ship ship = new Ship();
+        ship.setWeight(1000.0);
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setEntry(LocalDateTime.now());
+        stay.setExitShip(LocalDateTime.now().plusHours(1));
+
+        Assertions.assertEquals(BigDecimal.valueOf(300.0),service.calculate(stay).setScale(1));
+    }
+
+    @Test
+    void shouldExit_success(){
+        Ship ship = new Ship();
+        ship.setWeight(1000.0);
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setEntry(LocalDateTime.now().minusHours(2));
+        StayResponseDTO response = new StayResponseDTO();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(stay));
+        Mockito.when(assembler.toModel(stay)).thenReturn(response);
+
+        StayResponseDTO pierResponseDTO = service.exit(ID);
+
+        Assertions.assertEquals(response.getExitShip(), pierResponseDTO.getExitShip());
+    }
+
+    @Test
+    void shouldExit_fail(){
+        Stay stay = new Stay();
+        stay.setExitShip(LocalDateTime.now().minusHours(1));
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(stay));
+        Assertions.assertThrows(StayCloseException.class, () -> service.exit(ID));
+    }
+
+    @Test
+    void shouldFindShipStays(){
+        List<Stay> shipStay = repository.findByShipId(ID);
+
+        Mockito.when(repository.findByShipId(any())).thenReturn(shipStay);
+        Assertions.assertEquals(shipStay, service.shipStays(ID));
     }
 }
