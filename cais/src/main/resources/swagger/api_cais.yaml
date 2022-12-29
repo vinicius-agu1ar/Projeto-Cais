@@ -647,8 +647,288 @@ paths:
                 $ref: '#/components/schemas/ShipNotFound'
         5XX:
           description: "Erro no servidor, tente mais tarde!"
+  /api/stay:
+    get:
+      tags:
+        - Stay
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todas Stays
+      description: "Através desse endpoint você poderá listar todas as Stays. Existe filtros para o retorno da requisição, utilizando os Params."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayResponseDTO'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/stay/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Buscar Stay por id
+      description: "Através desse endpoint você poderá consultar Stay por id. Se não existir, retornará 404."
+      tags:
+        - Stay
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayResponseDTO'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Atualizar Stay por id
+      description: "Através desse endpoint você poderá atualizar uma Stay. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      tags:
+        - Stay
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StayRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayResponseDTO'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayNotFound'
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Requisição Inválida",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/stay/bind/ship/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+
+    post:
+      summary: Entrada de um Ship em uma Stay
+      description: "Através desse endpoint você poderá cadastrar novas Stays. Ele será criado a partir de um vinculo entre um ship e uma stay"
+      tags:
+        - Stay
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayVincularResponseDTO'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipNotFound'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipOpenInStay'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/stay/exit/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    post:
+      summary: Saida de um Ship de uma Stay
+      description: "Através desse endpoint será declarado a saída de um determinado Ship da Stay."
+      tags:
+        - Stay
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayResponseDTO'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayNotFound'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StayIsAlreadyClosed'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
 components:
   schemas:
+    StayRequestDTO:
+      type: object
+      properties:
+        ship:
+          type: object
+          properties:
+            wheight:
+              type: number
+              example: 20023.36
+        finalPrice:
+          type: number
+          example: 1998.69
+    StayIsAlreadyClosed:
+      type: object
+      properties:
+        code:
+          type: string
+          example: STAY_IS_ALREADY_CLOSED
+        message:
+          type: string
+          example: The stay is already closed, you cannot close a stay that has already been closed
+        menssagem:
+          type: string
+          example: A Estadia já está fechada, não pode fechar uma Estadia que já foi fechada
+        details:
+          type: array
+          items:
+            type: string
+            example: STAY_IS_ALREADY_CLOSED
+    StayNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: STAY_NOT_FOUND
+        message:
+          type: string
+          example: Stay not found, check before making this request again
+        mensagem:
+          type: string
+          example: Estadia não encontrada, verifique antes de fazer esta solicitação novamente
+        details:
+          type: array
+          items:
+            type: string
+            example: STAY_NOT_FOUND
+    ShipOpenInStay:
+      type: object
+      properties:
+        code:
+          type: string
+          example: SHIP_OPEN_IN_STAY
+        message:
+          type: string
+          example: Open ship in stay, the ship cannot have open status in a stay
+        menssagem:
+          type: string
+          example: Navio aberto em estadia, o navio não pode ter o status aberto em uma estadia
+        details:
+          type: array
+          items:
+            type: string
+            example: SHIP_OPEN_IN_STAY
+    StayVincularResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        ship:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Compass.Ship
+            wheight:
+              type: number
+              example: 20023.36
+        entry:
+          type: string
+          example: 20-12-2022 18:10:00
+        exitShip:
+          type: string
+          example: null
+        finalPrice:
+          type: number
+          example: null
+        status:
+          type: string
+          example: Open
+    StayResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        ship:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Compass.Ship
+            wheight:
+              type: number
+              example: 20023.36
+        entry:
+          type: string
+          example: 20-12-2022 18:10:00
+        exitShip:
+          type: string
+          example: 20-12-2022 18:10:00
+        finalPrice:
+          type: number
+          example: 1998.69
+        status:
+          type: string
+          example: Close
     ShipResponseDTONull:
       type: object
       properties:

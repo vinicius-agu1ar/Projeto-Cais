@@ -137,6 +137,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
+    @ExceptionHandler(StayNotFoundException.class)
+    public final ResponseEntity<Object> handleStayNotFoundException(StayNotFoundException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.STAY_NOT_FOUND, CodeErro.ESTADIA_NAO_ENCONTRADA, ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
     @ExceptionHandler(StayCloseException.class)
     public final ResponseEntity<Object> handleStayCloseException(StayCloseException ex) {
         log.error(ex.getMessage());

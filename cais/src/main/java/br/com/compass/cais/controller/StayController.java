@@ -22,7 +22,6 @@ public class StayController {
 
     private final StayService service;
 
-
     @GetMapping
     public ResponseEntity<List<StayResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination) {
         log.info("Listando Stays com página de {} registros...", pagination.getPageSize());

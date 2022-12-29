@@ -51,22 +51,22 @@ public class StayControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Test
-    void update() throws Exception {
-        StayRequestDTO request = getStayRequestDTO();
-        String input = TestUtils.mapToJson(request);
-
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.put(ID_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(input)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
+//    @Test
+//    void update() throws Exception {
+//        StayRequestDTO request = getStayRequestDTO();
+//        String input = TestUtils.mapToJson(request);
+//
+//        MvcResult result = mvc
+//                .perform(MockMvcRequestBuilders.put(ID_URL)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                        .content(input)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andReturn();
+//
+//        MockHttpServletResponse response = result.getResponse();
+//
+//        assertEquals(HttpStatus.OK.value(), response.getStatus());
+//    }
 
     @Test
     void findAll() throws Exception {
@@ -118,10 +118,10 @@ public class StayControllerTest {
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
-    private StayRequestDTO getStayRequestDTO() {
-        return StayRequestDTO.builder()
-                .entry(null)
-                .exit(null)
-                .build();
-    }
+//    private StayRequestDTO getStayRequestDTO() {
+//        return StayRequestDTO.builder()
+//                .entry(null)
+//                .exit(null)
+//                .build();
+//    }
 }
