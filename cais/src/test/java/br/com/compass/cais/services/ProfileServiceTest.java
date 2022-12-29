@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProfileServiceTest {
+
+    static final Long ID = 1L;
     @InjectMocks
     private ProfileService service;
 
@@ -58,4 +61,11 @@ public class ProfileServiceTest {
         doThrow(new DataIntegrityViolationException("test")).when(repository).save(any());
         Assertions.assertThrows(EntityInUseException.class, () -> service.create(profile));
     }
+
+    @Test
+    void shouldDeleteProfile_success() {
+        service.delete(ID);
+        verify(repository).deleteById(any());
+    }
+
 }

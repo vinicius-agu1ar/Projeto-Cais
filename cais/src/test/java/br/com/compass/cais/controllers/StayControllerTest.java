@@ -49,7 +49,7 @@ public class StayControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Test
+   @Test
     void update() throws Exception {
         StayRequestDTO request = getStayRequestDTO();
         String input = TestUtils.mapToJson(request);
