@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProfileControllerTest {
 
     public static final String BASE_URL = "/api/profile";
+    public static final String ID_URL = BASE_URL + "/1";
+
     @MockBean
     private ProfileRepository repository;
     @MockBean
@@ -58,5 +60,17 @@ public class ProfileControllerTest {
         return ProfileRequestDTO.builder()
                 .name("Test")
                 .build();
+    }
+    @Test
+    void delete() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.delete(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
 }
