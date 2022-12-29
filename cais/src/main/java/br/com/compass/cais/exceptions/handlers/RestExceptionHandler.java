@@ -158,7 +158,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(ProfileNotFoundException.class)
     public final ResponseEntity<Object> handleProfileNotFoundException(Exception ex) {
         log.error(ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PROFILE_NOT_FOUND, CodeErro.PERFIL_NAO_ENCONTRADO, ex);
