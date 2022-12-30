@@ -13,10 +13,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -38,7 +44,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public Profile create(Profile profile){
+    public Profile create(Profile profile) {
         log.info("Chamando método create (salvando no repository) - Service Profile");
         try {
             return repository.save(profile);
@@ -51,14 +57,55 @@ public class ProfileService {
     @Transactional
     public void delete(Long profileId) {
         log.info("Chamando método delete (excluindo no repository) - Service Profile");
-        try{
+        try {
             repository.deleteById(profileId);
             repository.flush();
-        }catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ProfileNotFoundException();
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException();
         }
     }
 
+    public Page<ProfileResponseDTO> findAll(Pageable pageable) {
+        log.info("Chamando método findAll - Service Profile");
+        Page<Profile> pageProfile = repository.findAll(pageable);
+        List<ProfileResponseDTO> profileResponseDTOS = assembler.toCollectionModel(pageProfile.getContent());
+        return new PageImpl<>(profileResponseDTOS, pageable, pageProfile.getTotalElements());
+    }
+
+    public List<ProfileResponseDTO> verifyProfileResponseDTO(Pageable pageable, String name) {
+        log.info("Chamando método verifyCompanyResponseDTO - Service Company");
+        if (name != null) {
+            List<ProfileResponseDTO> list = new ArrayList<>();
+            ProfileResponseDTO byName = findByName(name);
+            list.add(byName);
+            return list;
+        } else {
+            List<Profile> profiles = repository.findAll(pageable).getContent();
+            return assembler.toCollectionModel(profiles);
+        }
+    }
+
+    public ProfileResponseDTO findByName(String name) {
+        log.info("Chamando método findByName - Service Profile");
+        Profile profile = fetchOrFail(name);
+        return assembler.toModel(profile);
+    }
+
+    private Profile fetchOrFail(String profileName) {
+        log.info("Chamando método fetchOrFail - Service profile");
+        return Optional.ofNullable(repository.findByName(profileName)).orElseThrow(ProfileNotFoundException::new);
+    }
+
+    private Profile fetchOrFail(Long profileId) {
+        log.info("Chamando método fetchOrFail - Service Profile");
+        return repository.findById(profileId).orElseThrow(ProfileNotFoundException::new);
+    }
+
+    public ProfileResponseDTO findBy(Long id) {
+        log.info("Chamando método findBy - Service Profile");
+        Profile profile = fetchOrFail(id);
+        return assembler.toModel(profile);
+    }
 }
