@@ -898,7 +898,7 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     put:
-      summary: Atualizar Ship por id
+      summary: Atualizar Profile por id
       description: "Através desse endpoint você poderá atualizar uma Profile. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
       tags:
         - Profile
