@@ -805,6 +805,154 @@ paths:
                 $ref: '#/components/schemas/StayIsAlreadyClosed'
         5XX:
           description: "Erro no servidor, tente mais tarde!"
+  /api/profile:
+    get:
+      tags:
+        - Profile
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todos Profiles
+      description: "Através desse endpoint você poderá listar todas os Profiles. Existe filtros para o retorno da requisição, utilizando os Params."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDTO'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    post:
+      summary: Cadastra uma nova Profile
+      description: "Através desse endpoint você poderá cadastrar novas Profiles. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
+      tags:
+        - Profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileRequestDTO"
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDTO'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "mensagem": "A entidade está em uso, verifique antes de executar esta ação novamente",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/profile/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Lista Profiles por id
+      description: "Através desse endpoint você poderá consultar Profile por id. Se não existir, retornará 404."
+      tags:
+        - Profile
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDTO'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Atualizar Profile por id
+      description: "Através desse endpoint você poderá atualizar uma Profile. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      tags:
+        - Profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDTO'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileNotFound'
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    delete:
+      summary: Excluir Profile por id
+      description: "Através desse endpoint você poderá excluir uma Profile. Se o ID infromado não existir, retornará 404."
+      tags:
+        - Profile
+      responses:
+        204:
+          description: "No Content"
+        400:
+          description: Bad Request
+
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+
 components:
   schemas:
     StayRequestDTO:
@@ -1073,6 +1221,23 @@ components:
           type: string
           enum:
             - Nacional
+    ProfileResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Compass.Manager
+    ProfileRequestDTO:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: Compass.Manager
     CompanyRequestDTO:
       required:
         - cnpj
@@ -1130,6 +1295,23 @@ components:
           items:
             type: string
             example: PIER_NOT_FOUND
+    ProfileNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: PROFILE_NOT_FOUND
+        message:
+          type: string
+          example: Profile not found, check before making this request again
+        mensagem:
+          type: string
+          example: Perfil não encontrado, verifique antes de fazer esta solicitação novamente
+        details:
+          type: array
+          items:
+            type: string
+            example: PROFILE_NOT_FOUND
     Pageable:
       type: object
       properties:

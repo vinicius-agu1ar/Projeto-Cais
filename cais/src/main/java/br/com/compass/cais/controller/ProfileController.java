@@ -1,7 +1,9 @@
 package br.com.compass.cais.controller;
 
 import br.com.compass.cais.services.ProfileService;
+import br.com.compass.cais.services.dto.request.PierRequestDTO;
 import br.com.compass.cais.services.dto.request.ProfileRequestDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
 import br.com.compass.cais.services.dto.response.profile.ProfileResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +49,13 @@ public class ProfileController {
     public ResponseEntity<ProfileResponseDTO> findBy(@PathVariable("id") Long id){
         log.info("Buscando Profile por id...");
         ProfileResponseDTO profileResponseDTO = service.findBy(id);
+        return ResponseEntity.status(HttpStatus.OK).body(profileResponseDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProfileResponseDTO> update(@PathVariable("id") Long id, @RequestBody @Valid ProfileRequestDTO request){
+        log.info("Atualizando Profile por id...");
+        ProfileResponseDTO profileResponseDTO = service.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(profileResponseDTO);
     }
 }

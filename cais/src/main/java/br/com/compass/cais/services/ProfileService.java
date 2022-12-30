@@ -2,6 +2,7 @@ package br.com.compass.cais.services;
 
 
 import br.com.compass.cais.entites.Profile;
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.exceptions.response.ProfileNotFoundException;
 import br.com.compass.cais.repository.ProfileRepository;
@@ -75,7 +76,7 @@ public class ProfileService {
     }
 
     public List<ProfileResponseDTO> verifyProfileResponseDTO(Pageable pageable, String name) {
-        log.info("Chamando método verifyCompanyResponseDTO - Service Company");
+        log.info("Chamando método verifyCompanyResponseDTO - Service Profile");
         if (name != null) {
             List<ProfileResponseDTO> list = new ArrayList<>();
             ProfileResponseDTO byName = findByName(name);
@@ -106,6 +107,14 @@ public class ProfileService {
     public ProfileResponseDTO findBy(Long id) {
         log.info("Chamando método findBy - Service Profile");
         Profile profile = fetchOrFail(id);
+        return assembler.toModel(profile);
+    }
+
+    public ProfileResponseDTO update(Long id, ProfileRequestDTO request) {
+        log.info("Chamando método update - Service Ship");
+        Profile profile = fetchOrFail(id);
+        disassembler.copyToDomainObject(request,profile);
+        profile = create(profile);
         return assembler.toModel(profile);
     }
 }
