@@ -15,4 +15,8 @@ public class ProfileInputDisassembler {
     public Profile toDomainObject(ProfileRequestDTO profileRequestDTO) {
         return modelMapper.map(profileRequestDTO, Profile.class);
     }
+
+    public void copyToDomainObject(ProfileRequestDTO profileRequestDTO, Profile profile){
+        modelMapper.map(profileRequestDTO, profile);
+    }
 }
