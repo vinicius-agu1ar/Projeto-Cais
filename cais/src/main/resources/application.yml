@@ -6,4 +6,10 @@ spring:
     password: Compass123
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: false
+    show-sql: true
+
+#JWT
+cais:
+  jwt:
+    expiration: '86400000'
+    secret: ${JWT_SECRET:12345678}

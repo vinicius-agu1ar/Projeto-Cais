@@ -23,7 +23,9 @@ public enum CodeErro {
     CAIS_CHEIO("O cais está cheio, tente mudar o cais"),
     NAVIO_NAO_COMPATIVEL("O Navio não possui vinculo com Empresa, Pier ou com nenhum dos dois"),
     NAVIO_ABERTO_EM_ESTADIA("Navio aberto em estadia, o navio não pode ter o status aberto em uma estadia"),
-    ESTADIA_JA_ESTA_FECHADA("A Estadia já está fechada, não pode fechar uma Estadia que já foi fechada");
+    ESTADIA_JA_ESTA_FECHADA("A Estadia já está fechada, não pode fechar uma Estadia que já foi fechada"),
+    TOKEN_INVALIDO("O token está inválido ou foi expirado"),
+    ERROR_AO_GERAR_TOKEN("Erro ao gerar token JWT");
 
     private final String menssagem;
 }
