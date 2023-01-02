@@ -4,6 +4,7 @@ import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.services.StayService;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
+import br.com.compass.cais.services.dto.response.stay.StayResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -58,9 +59,9 @@ public class StayController {
         return ResponseEntity.status(HttpStatus.CREATED).body(exit);
     }
     @GetMapping("/ship/{id}")
-    public ResponseEntity<List<StayResponseDTO>> shipStaysBy(@PathVariable("id") Long id) {
+    public ResponseEntity<List<StayResumeResponseDTO>> shipStaysBy(@PathVariable("id") Long id) {
         log.info("Listando Stays de um Ship pelo seu ID");
-        List<StayResponseDTO> stayResponseDTO = service.shipStays(id);
-        return ResponseEntity.status(HttpStatus.OK).body(stayResponseDTO);
+        List<StayResumeResponseDTO> stayResumeResponseDTO = service.shipStays(id);
+        return ResponseEntity.status(HttpStatus.OK).body(stayResumeResponseDTO);
     }
 }
