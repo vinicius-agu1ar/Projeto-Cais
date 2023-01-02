@@ -11,6 +11,7 @@ public enum ErrorCode {
     PIER_NOT_FOUND("Pier not found, check before making this request again"),
     SHIP_NOT_FOUND("Ship not found, check before making this request again"),
     STAY_NOT_FOUND("Stay not found, check before making this request again"),
+    USER_NOT_FOUND("User not found, check before making this request again"),
     PROFILE_NOT_FOUND("Profile not found, check before making this request again"),
     BAD_REQUEST("Request invalid"),
     INVALID_PARAMETER("Invalid request parameter"),

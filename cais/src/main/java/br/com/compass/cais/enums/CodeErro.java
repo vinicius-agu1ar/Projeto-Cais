@@ -12,6 +12,7 @@ public enum CodeErro {
     NAVIO_NAO_ENCONTRADO("Navio não encontrado, verifique antes de fazer esta solicitação novamente"),
     ESTADIA_NAO_ENCONTRADA("Estadia não encontrada, verifique antes de fazer esta solicitação novamente"),
     PERFIL_NAO_ENCONTRADO("Perfil não encontrado, verifique antes de fazer esta solicitação novamente"),
+    USUARIO_NAO_ENCONTRADO("Usuario não encontrado, verifique antes de fazer esta solicitação novamente"),
     PEDIDO_RUIM("Requisição inválida"),
     INVALIDO_PARAMETRO("Parâmetro de solicitação inválido"),
     ERRO_INTERNO_SERVIDOR("Ocorreu um erro interno."),
