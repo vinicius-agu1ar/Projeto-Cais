@@ -2,6 +2,7 @@ package br.com.compass.cais.services.assembler;
 
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
+import br.com.compass.cais.services.dto.response.stay.StayResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,14 @@ public class StayDTOAssembler {
         return modelMapper.map(stay,StayResponseDTO.class);
     }
 
+    public StayResumeResponseDTO toResumeModel(Stay stay){
+        return modelMapper.map(stay,StayResumeResponseDTO.class);
+    }
+    public List<StayResumeResponseDTO> toCollectionResumeModel(List<Stay> stays){
+        return stays.stream()
+                .map(this::toResumeModel)
+                .collect(Collectors.toList());
+    }
     public List<StayResponseDTO> toCollectionModel(List<Stay> stays){
         return stays.stream()
                 .map(this::toModel)

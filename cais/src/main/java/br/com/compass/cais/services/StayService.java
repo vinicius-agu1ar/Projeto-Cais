@@ -12,6 +12,7 @@ import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
 import br.com.compass.cais.services.dto.request.StayRequestDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
+import br.com.compass.cais.services.dto.response.stay.StayResumeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -122,10 +123,10 @@ public class StayService {
         }
     }
 
-    public List<StayResponseDTO> shipStays(Long id) {
+    public List<StayResumeResponseDTO> shipStays(Long id) {
         log.info("Chamando método shipStays - Service Stay");
         List<Stay> shipStay = repository.findByShipId(id);
-        return assembler.toCollectionModel(shipStay);
+        return assembler.toCollectionResumeModel(shipStay);
     }
 
     public List<StayResponseDTO> verifyStayResponseDTO (Pageable pageable, Status status){
