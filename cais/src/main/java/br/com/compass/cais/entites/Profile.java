@@ -18,5 +18,4 @@ public class Profile {
 
     @Column(name = "NAME")
     private String name;
-
 }
