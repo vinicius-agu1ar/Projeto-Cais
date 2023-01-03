@@ -26,10 +26,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -223,4 +220,46 @@ class CompanyServiceTest {
         assertNull(ship.getCompany());
     }
 
+    @Test
+        void shouldVerifyCompanyResponseDTO_findAll() {
+        Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
+        List<CompanyResponseDTO> companiesResponseDTOS = Arrays.asList(new CompanyResponseDTO());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
+        Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companiesResponseDTOS);
+
+        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(null, pageable,null);
+
+        Assertions.assertEquals(all, companiesResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyCompanyResponseDTO_findByOrigin() {
+        Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
+        List<CompanyResponseDTO> companiesResponseDTOS = Arrays.asList(new CompanyResponseDTO());
+        Company company = new Company();
+        company.setOrigin(Origin.NATIONAL);
+
+        Mockito.when(repository.findByOrigin(any(), any())).thenReturn(companiesPage);
+        Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companiesResponseDTOS);
+
+        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(company.getOrigin(), pageable,null);
+
+        Assertions.assertEquals(all, companiesResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyCompanyResponseDTO_findByName() {
+        Company company = new Company();
+        company.setOrigin(Origin.NATIONAL);
+        company.setName("name");
+        CompanyResponseDTO response = new CompanyResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(company);
+        Mockito.when(assembler.toModel(company)).thenReturn(response);
+
+        List<CompanyResponseDTO> companyResponseDTO = service.verifyCompanyResponseDTO(company.getOrigin(), pageable,company.getName());
+
+        Assertions.assertEquals(companyResponseDTO.get(0), response);
+    }
 }

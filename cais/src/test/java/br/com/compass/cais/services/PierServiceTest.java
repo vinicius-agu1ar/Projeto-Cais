@@ -2,7 +2,6 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
-import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.exceptions.response.PierFullException;
 import br.com.compass.cais.exceptions.response.PierNotFoundException;
@@ -157,6 +156,12 @@ class PierServiceTest {
     }
 
     @Test
+    void shouldDeletePier_errorEmptyResultDataAccessException() {
+        doThrow(new EmptyResultDataAccessException(1)).when(repository).deleteById(any());
+        Assertions.assertThrows(PierNotFoundException.class, () -> service.delete(ID));
+    }
+
+    @Test
     void shouldFindAllPiers_success() {
         Page<Pier> piersPage = new PageImpl<>(List.of(new Pier()));
         List<PierResponseDTO> pierResponseDTOs = Arrays.asList(new PierResponseDTO());
@@ -182,5 +187,32 @@ class PierServiceTest {
 
         Assertions.assertEquals(response.getName(), pierResponseDTO.getName());
         Assertions.assertEquals(response, pierResponseDTO);
+    }
+
+    @Test
+    void shouldVerifyPierResponseDTO_withStatus(){
+        Page<Pier> pierPage = new PageImpl<>(List.of(new Pier()));
+        List<PierResponseDTO> pierResponseDTOS = Arrays.asList(new PierResponseDTO());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(pierPage);
+        Mockito.when(assembler.toCollectionModel(pierPage.getContent())).thenReturn(pierResponseDTOS);
+
+        List<PierResponseDTO> all = service.verifyPierResponseDTO(pageable,null);
+
+        Assertions.assertEquals(all, pierResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyPierResponseDTO_findByName() {
+        Pier pier = new Pier();
+        pier.setName("name");
+        PierResponseDTO response = new PierResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(pier);
+        Mockito.when(assembler.toModel(pier)).thenReturn(response);
+
+        List<PierResponseDTO> pierResponseDTO = service.verifyPierResponseDTO(pageable, pier.getName());
+
+        Assertions.assertEquals(pierResponseDTO.get(0), response);
     }
 }

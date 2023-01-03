@@ -4,6 +4,7 @@ import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
+import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.exceptions.response.*;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
@@ -17,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +31,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -119,7 +118,7 @@ public class StayServiceTest {
     }
 
     @Test
-    void shoudBindStayShip_success() {
+    void shouldBindStayShip_success() {
         Ship ship = new Ship();
         ship.setPier(new Pier());
         ship.setCompany(new Company());
@@ -189,5 +188,31 @@ public class StayServiceTest {
 
         Mockito.when(repository.findByShipId(any())).thenReturn(shipStay);
         Assertions.assertEquals(shipStay, service.shipStays(ID));
+    }
+
+    @Test
+    void shouldVerifyStayResponseDTO_withStatus(){
+    Page<Stay> staysPage = new PageImpl<>(List.of(new Stay()));
+    List<StayResponseDTO> stayResponseDTOS = Arrays.asList(new StayResponseDTO());
+
+        Mockito.when(repository.findByStatus(any(), any())).thenReturn(staysPage);
+        Mockito.when(assembler.toCollectionModel(staysPage.getContent())).thenReturn(stayResponseDTOS);
+
+    List<StayResponseDTO> all = service.verifyStayResponseDTO(pageable, Status.CLOSE);
+
+        Assertions.assertEquals(all, stayResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyStayResponseDTO_withoutStatus() {
+        Page<Stay> staysPage = new PageImpl<>(List.of(new Stay()));
+        List<StayResponseDTO> stayResponseDTOS = Arrays.asList(new StayResponseDTO());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(staysPage);
+        Mockito.when(assembler.toCollectionModel(staysPage.getContent())).thenReturn(stayResponseDTOS);
+
+        List<StayResponseDTO> all = service.verifyStayResponseDTO(pageable, null);
+
+        Assertions.assertEquals(all, stayResponseDTOS);
     }
 }
