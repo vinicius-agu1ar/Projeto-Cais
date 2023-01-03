@@ -22,7 +22,7 @@ public class UserController {
 
     private final UserService service;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid UserRequestDTO request) {
         log.info("Criando um novo User...");
         UserResponseDTO response = service.create(request);
@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> findAll(@PageableDefault(size = 10) Pageable pagination){
-        log.info("Listando Ships com página de {} registros...", pagination.getPageSize());
+        log.info("Listando User com página de {} registros...", pagination.getPageSize());
         List<UserResponseDTO> responsePage = service.findAll(pagination).getContent();
         return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }

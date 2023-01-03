@@ -1,5 +1,7 @@
 package br.com.compass.cais.controllers;
 
+import br.com.compass.cais.config.security.SecurityFilter;
+import br.com.compass.cais.config.security.service.TokenService;
 import br.com.compass.cais.controller.StayController;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.StayService;
@@ -51,6 +53,10 @@ public class StayControllerTest {
     private StayDTOAssembler assembler;
     @MockBean
     private StayInputDisassembler disassembler;
+    @MockBean
+    private TokenService tokenService;
+    @MockBean
+    private SecurityFilter securityFilter;
     @Autowired
     private MockMvc mvc;
 

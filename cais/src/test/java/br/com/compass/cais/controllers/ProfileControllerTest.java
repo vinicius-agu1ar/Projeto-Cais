@@ -1,5 +1,7 @@
 package br.com.compass.cais.controllers;
 
+import br.com.compass.cais.config.security.SecurityFilter;
+import br.com.compass.cais.config.security.service.TokenService;
 import br.com.compass.cais.controller.ProfileController;
 import br.com.compass.cais.repository.ProfileRepository;
 import br.com.compass.cais.services.ProfileService;
@@ -45,6 +47,10 @@ public class ProfileControllerTest {
     private ProfileDTOAssembler assembler;
     @MockBean
     private ProfileInputDisassembler disassembler;
+    @MockBean
+    private TokenService tokenService;
+    @MockBean
+    private SecurityFilter securityFilter;
     @Autowired
     private MockMvc mvc;
 

@@ -2,20 +2,30 @@ package br.com.compass.cais.controllers;
 
 import br.com.compass.cais.config.security.SecurityFilter;
 import br.com.compass.cais.config.security.service.TokenService;
-import br.com.compass.cais.controller.CompanyController;
-import br.com.compass.cais.enums.Origin;
-import br.com.compass.cais.repository.CompanyRepository;
-import br.com.compass.cais.services.CompanyService;
-import br.com.compass.cais.services.assembler.CompanyDTOAssembler;
-import br.com.compass.cais.services.assembler.CompanyInputDisassembler;
+import br.com.compass.cais.controller.UserController;
+import br.com.compass.cais.entites.User;
+import br.com.compass.cais.repository.StayRepository;
+import br.com.compass.cais.repository.UserRepository;
+import br.com.compass.cais.services.StayService;
+import br.com.compass.cais.services.UserService;
+import br.com.compass.cais.services.assembler.StayDTOAssembler;
+import br.com.compass.cais.services.assembler.StayInputDisassembler;
+import br.com.compass.cais.services.assembler.UserDTOAssembler;
+import br.com.compass.cais.services.assembler.UserInputDisassembler;
 import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
+import br.com.compass.cais.services.dto.request.PierRequestDTO;
+import br.com.compass.cais.services.dto.request.UserRequestDTO;
 import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.user.UserResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,35 +40,34 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-@WebMvcTest(controllers = CompanyController.class)
-@AutoConfigureMockMvc(addFilters = false) // ignorando a camada do security
-class CompanyControllerTest {
 
-    public static final String BASE_URL = "/api/company";
+@WebMvcTest(controllers = UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
+public class UserControllerTest {
+
+    public static final String BASE_URL = "/api/user";
     public static final String ID_URL = BASE_URL + "/1";
-    public static final String ID_URL_SHIPS = ID_URL + "/ships";
-    public static final String ID_URL_BIND = ID_URL + "/ship/1";
-    public static final String ID_URL_UNLINK = BASE_URL + "/ship/1";
-    public static final Long ID = 1L;
 
     @MockBean
-    private CompanyRepository repository;
+    private UserRepository repository;
     @MockBean
-    private CompanyService service;
+    private UserService service;
     @MockBean
-    private CompanyDTOAssembler assembler;
+    private UserDTOAssembler assembler;
     @MockBean
-    private CompanyInputDisassembler disassembler;
+    private UserInputDisassembler disassembler;
     @MockBean
     private TokenService tokenService;
     @MockBean
     private SecurityFilter securityFilter;
     @Autowired
     private MockMvc mvc;
+
     @Test
     void findAll() throws Exception {
-        List<CompanyResponseDTO> companies = Arrays.asList(new CompanyResponseDTO());
-        when(service.findAll(any(Pageable.class))).thenReturn(companies);
+        List<UserResponseDTO> users = Arrays.asList(new UserResponseDTO());
+        Page<UserResponseDTO> page = new PageImpl<>(users);
+        when(service.findAll(any(Pageable.class))).thenReturn(page);
         MvcResult result = mvc
                 .perform(MockMvcRequestBuilders.get(BASE_URL)
                         .accept(MediaType.APPLICATION_JSON)
@@ -70,11 +79,10 @@ class CompanyControllerTest {
 
     @Test
     void create() throws Exception {
-        CompanyRequestDTO request = getCompanyRequestDTO();
+        UserRequestDTO request = getUserRequestDTO();
         String input = TestUtils.mapToJson(request);
-
         MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(BASE_URL)
+                .perform(MockMvcRequestBuilders.post(BASE_URL + "/create")
                         .accept(MediaType.APPLICATION_JSON)
                         .content(input)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -99,46 +107,21 @@ class CompanyControllerTest {
     }
 
     @Test
-    void bindCompanyShip() throws Exception {
+    void delete() throws Exception {
         MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
+                .perform(MockMvcRequestBuilders.delete(ID_URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    @Test
-    void unlinkCompanyShip() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(ID_URL_UNLINK)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    @Test
-    void findAllShips() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(ID_URL_SHIPS)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
 
     @Test
     void update() throws Exception {
-        CompanyRequestDTO request = getCompanyRequestDTO();
+        UserRequestDTO request = getUserRequestDTO();
         String input = TestUtils.mapToJson(request);
 
         MvcResult result = mvc
@@ -153,24 +136,10 @@ class CompanyControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @Test
-    void delete() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.delete(ID_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-    }
-
-    private CompanyRequestDTO getCompanyRequestDTO() {
-        return CompanyRequestDTO.builder()
-                .cnpj("Test")
-                .name("Test")
-                .Origin(Origin.INTERNATIONAL)
-                .build();
+    private UserRequestDTO getUserRequestDTO() {
+        UserRequestDTO userRequestDTO = new UserRequestDTO();
+        userRequestDTO.setPassword("test");
+        userRequestDTO.setEmail("test1");
+        return userRequestDTO;
     }
 }

@@ -1,5 +1,7 @@
 package br.com.compass.cais.controllers;
 
+import br.com.compass.cais.config.security.SecurityFilter;
+import br.com.compass.cais.config.security.service.TokenService;
 import br.com.compass.cais.controller.PierController;
 import br.com.compass.cais.repository.PierRepository;
 import br.com.compass.cais.services.PierService;
@@ -50,6 +52,10 @@ class PierControllerTest {
     private PierDTOAssembler assembler;
     @MockBean
     private PierInputDisassembler disassembler;
+    @MockBean
+    private TokenService tokenService;
+    @MockBean
+    private SecurityFilter securityFilter;
     @Autowired
     private MockMvc mvc;
 
