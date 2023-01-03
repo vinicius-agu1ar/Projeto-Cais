@@ -55,6 +55,7 @@ class CompanyControllerTest {
     private SecurityFilter securityFilter;
     @Autowired
     private MockMvc mvc;
+
     @Test
     void findAll() throws Exception {
         List<CompanyResponseDTO> companies = Arrays.asList(new CompanyResponseDTO());

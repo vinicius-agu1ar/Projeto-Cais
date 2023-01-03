@@ -1,8 +1,6 @@
 package br.com.compass.cais.config.security.service;
 
 import br.com.compass.cais.entites.User;
-import br.com.compass.cais.exceptions.response.GenerateTokenException;
-import br.com.compass.cais.exceptions.response.InvalidTokenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -31,7 +29,7 @@ public class TokenService {
                     .withExpiresAt(expiration())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
-            throw new GenerateTokenException();
+            throw new RuntimeException("Erro ao gerar token Jwt", exception);
         }
     }
 
@@ -44,7 +42,7 @@ public class TokenService {
                     .verify(tokenJWT)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            throw new InvalidTokenException();
+            throw new RuntimeException("Token JWT inválido ou expirado!");
         }
     }
 

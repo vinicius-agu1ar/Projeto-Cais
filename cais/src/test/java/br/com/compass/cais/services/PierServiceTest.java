@@ -2,6 +2,7 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
+import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.response.EntityInUseException;
 import br.com.compass.cais.exceptions.response.PierFullException;
 import br.com.compass.cais.exceptions.response.PierNotFoundException;
@@ -27,8 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -143,9 +143,11 @@ class PierServiceTest {
     }
 
     @Test
-    void shouldDeletePier_error() {
-        doThrow(new EmptyResultDataAccessException(21)).when(repository).deleteById(any());
-        Assertions.assertThrows(PierNotFoundException.class, () -> service.delete(ID));
+    void shouldFindByPier_PierNotFoundExceptionError() {
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(PierNotFoundException.class, () -> service.findBy(ID));
     }
 
     @Test

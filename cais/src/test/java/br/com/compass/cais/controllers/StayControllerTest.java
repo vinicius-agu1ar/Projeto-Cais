@@ -3,6 +3,7 @@ package br.com.compass.cais.controllers;
 import br.com.compass.cais.config.security.SecurityFilter;
 import br.com.compass.cais.config.security.service.TokenService;
 import br.com.compass.cais.controller.StayController;
+import br.com.compass.cais.exceptions.response.StayNotFoundException;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.StayService;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

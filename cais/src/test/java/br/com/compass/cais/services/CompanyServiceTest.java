@@ -2,6 +2,7 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Ship;
+import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.exceptions.response.CompanyAlreadySelectedException;
 import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.response.EntityInUseException;
@@ -25,13 +26,15 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -77,6 +80,14 @@ class CompanyServiceTest {
         Assertions.assertEquals(response.getName(), companyResponseDTO.getName());
         Assertions.assertEquals(response, companyResponseDTO);
     }
+
+    @Test
+    void shouldFindCompanyById_NotFound() {
+        Mockito.when(repository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(CompanyNotFoundException.class, () -> service.findBy(ID));
+    }
+
 
     @Test
     void shouldFindAllShipsInCompanies_success() {
@@ -211,4 +222,5 @@ class CompanyServiceTest {
 
         assertNull(ship.getCompany());
     }
+
 }
