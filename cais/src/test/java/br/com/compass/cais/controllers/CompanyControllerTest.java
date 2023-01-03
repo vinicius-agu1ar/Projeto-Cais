@@ -1,5 +1,7 @@
 package br.com.compass.cais.controllers;
 
+import br.com.compass.cais.config.security.SecurityFilter;
+import br.com.compass.cais.config.security.service.TokenService;
 import br.com.compass.cais.controller.CompanyController;
 import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.repository.CompanyRepository;
@@ -47,8 +49,13 @@ class CompanyControllerTest {
     private CompanyDTOAssembler assembler;
     @MockBean
     private CompanyInputDisassembler disassembler;
+    @MockBean
+    private TokenService tokenService;
+    @MockBean
+    private SecurityFilter securityFilter;
     @Autowired
     private MockMvc mvc;
+
     @Test
     void findAll() throws Exception {
         List<CompanyResponseDTO> companies = Arrays.asList(new CompanyResponseDTO());

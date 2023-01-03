@@ -5,7 +5,6 @@ import java.util.List;
 
 import br.com.compass.cais.enums.CodeErro;
 import br.com.compass.cais.enums.ErrorCode;
-import br.com.compass.cais.exceptions.response.CompanyInUseException;
 import br.com.compass.cais.exceptions.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -95,21 +94,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.ENTITY_IS_IN_USE, CodeErro.ENTIDADE_EM_USO, ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
-
-    @ExceptionHandler(PierInUseException.class)
-    public final ResponseEntity<Object> handlePierInUseException(PierInUseException ex){
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_IS_IN_USE, CodeErro.CAIS_ESTA_EM_USO, ex);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
-    }
-
-    @ExceptionHandler(CompanyInUseException.class)
-    public final ResponseEntity<Object> handleCompanyInUseException(CompanyInUseException ex){
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_IS_IN_USE, CodeErro.EMPRESA_EM_USO, ex);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
-    }
-
     @ExceptionHandler(PierFullException.class)
     public final ResponseEntity<Object> handlePierFullException(PierFullException ex) {
         log.error(ex.getMessage());
@@ -151,32 +135,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
-    @ExceptionHandler(InvalidTokenException.class)
-    public final ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex) {
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.TOKEN_INVALID, CodeErro.TOKEN_INVALIDO, ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
-    }
-
-    @ExceptionHandler(GenerateTokenException.class)
-    public final ResponseEntity<Object> handleGenerateTokenException(GenerateTokenException ex) {
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.TOKEN_INVALID, CodeErro.TOKEN_INVALIDO, ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
-    }
-
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.INTERNAL_SERVER_ERROR, CodeErro.ERRO_INTERNO_SERVIDOR, ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
-    }
-
-    @ExceptionHandler(ProfileNotFoundException.class)
-    public final ResponseEntity<Object> handleProfileNotFoundException(ProfileNotFoundException ex) {
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PROFILE_NOT_FOUND, CodeErro.PERFIL_NAO_ENCONTRADO, ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

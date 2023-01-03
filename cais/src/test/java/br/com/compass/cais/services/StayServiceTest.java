@@ -4,8 +4,7 @@ import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
-import br.com.compass.cais.exceptions.response.ShipNotCompatibleException;
-import br.com.compass.cais.exceptions.response.StayCloseException;
+import br.com.compass.cais.exceptions.response.*;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
@@ -18,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,7 +62,7 @@ public class StayServiceTest {
         Mockito.when(repository.save(any())).thenReturn(stay);
         Mockito.when(assembler.toModel(any())).thenReturn(response);
 
-        StayResponseDTO stayResponseDTO = service.update(ID,request);
+        StayResponseDTO stayResponseDTO = service.update(ID, request);
         assertEquals(response, stayResponseDTO);
         verify(repository).save(any());
     }
@@ -80,6 +82,11 @@ public class StayServiceTest {
     }
 
     @Test
+    void shouldDeleteExit_error() {
+        Assertions.assertThrows(StayNotFoundException.class, () -> service.fetchOrFail(ID));
+    }
+
+    @Test
     void shouldFindStayById_success() {
         Stay stay = new Stay();
         StayResponseDTO response = new StayResponseDTO();
@@ -94,7 +101,25 @@ public class StayServiceTest {
     }
 
     @Test
-    void shoudBindStayShip_success(){
+    void shouldFindByStayNotFoundExceptionError() {
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(StayNotFoundException.class, () -> service.findBy(ID));
+    }
+
+    @Test
+    void shouldUpdateStayNotFoundExceptionError() {
+
+        StayRequestDTO request = new StayRequestDTO();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(StayNotFoundException.class, () -> service.update(ID, request));
+    }
+
+    @Test
+    void shoudBindStayShip_success() {
         Ship ship = new Ship();
         ship.setPier(new Pier());
         ship.setCompany(new Company());
@@ -108,7 +133,7 @@ public class StayServiceTest {
     }
 
     @Test
-    void shouldBindStayShip_fail(){
+    void shouldBindStayShip_fail() {
         Ship ship = new Ship();
         ship.setPier(null);
         ship.setCompany(null);
@@ -121,7 +146,7 @@ public class StayServiceTest {
     }
 
     @Test
-    void shouldCalculate_success(){
+    void shouldCalculate_success() {
         Ship ship = new Ship();
         ship.setWeight(1000.0);
         Stay stay = new Stay();
@@ -129,11 +154,11 @@ public class StayServiceTest {
         stay.setEntry(LocalDateTime.now());
         stay.setExitShip(LocalDateTime.now().plusHours(1));
 
-        Assertions.assertEquals(BigDecimal.valueOf(300.0),service.calculate(stay).setScale(1));
+        Assertions.assertEquals(BigDecimal.valueOf(300.0), service.calculate(stay).setScale(1));
     }
 
     @Test
-    void shouldExit_success(){
+    void shouldExit_success() {
         Ship ship = new Ship();
         ship.setWeight(1000.0);
         Stay stay = new Stay();
@@ -150,7 +175,7 @@ public class StayServiceTest {
     }
 
     @Test
-    void shouldExit_fail(){
+    void shouldExit_fail() {
         Stay stay = new Stay();
         stay.setExitShip(LocalDateTime.now().minusHours(1));
 
@@ -159,7 +184,7 @@ public class StayServiceTest {
     }
 
     @Test
-    void shouldFindShipStays(){
+    void shouldFindShipStays() {
         List<Stay> shipStay = repository.findByShipId(ID);
 
         Mockito.when(repository.findByShipId(any())).thenReturn(shipStay);

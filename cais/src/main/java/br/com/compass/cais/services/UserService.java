@@ -15,6 +15,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,9 +32,13 @@ public class UserService {
 
     private final UserInputDisassembler disassembler;
 
+    private final PasswordEncoder encoder;
+
     @Transactional
     public UserResponseDTO create(UserRequestDTO request) {
         log.info("Chamando método create - Service User");
+        String encode = encoder.encode(request.getPassword());
+        request.setPassword(encode);
         User user = disassembler.toDomainObject(request);
         user = create(user);
         return assembler.toModel(user);

@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class UserResponseDTO {
     private Long id;
+    private String email;
 }

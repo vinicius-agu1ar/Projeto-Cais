@@ -2,15 +2,22 @@ package br.com.compass.cais.controllers;
 
 import br.com.compass.cais.config.security.SecurityFilter;
 import br.com.compass.cais.config.security.service.TokenService;
-import br.com.compass.cais.controller.StayController;
-import br.com.compass.cais.exceptions.response.StayNotFoundException;
+import br.com.compass.cais.controller.UserController;
+import br.com.compass.cais.entites.User;
 import br.com.compass.cais.repository.StayRepository;
+import br.com.compass.cais.repository.UserRepository;
 import br.com.compass.cais.services.StayService;
+import br.com.compass.cais.services.UserService;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
-import br.com.compass.cais.services.dto.request.ShipResumeRequestStay;
-import br.com.compass.cais.services.dto.request.StayRequestDTO;
-import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
+import br.com.compass.cais.services.assembler.UserDTOAssembler;
+import br.com.compass.cais.services.assembler.UserInputDisassembler;
+import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
+import br.com.compass.cais.services.dto.request.PierRequestDTO;
+import br.com.compass.cais.services.dto.request.UserRequestDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.user.UserResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,34 +34,28 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(controllers = StayController.class)
+@WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class StayControllerTest {
+public class UserControllerTest {
 
-    public static final String BASE_URL = "/api/stay";
+    public static final String BASE_URL = "/api/user";
     public static final String ID_URL = BASE_URL + "/1";
-    public static final String ID_URL_BIND = BASE_URL + "/bind/ship/1";
-    public static final String ID_URL_EXIT = BASE_URL + "/exit/1";
-    public static final String ID_URL_SHIP_STAYS = BASE_URL + "/ship/1";
-    public static final Long ID = 1L;
 
     @MockBean
-    private StayRepository repository;
+    private UserRepository repository;
     @MockBean
-    private StayService service;
+    private UserService service;
     @MockBean
-    private StayDTOAssembler assembler;
+    private UserDTOAssembler assembler;
     @MockBean
-    private StayInputDisassembler disassembler;
+    private UserInputDisassembler disassembler;
     @MockBean
     private TokenService tokenService;
     @MockBean
@@ -62,9 +63,65 @@ public class StayControllerTest {
     @Autowired
     private MockMvc mvc;
 
-   @Test
+    @Test
+    void findAll() throws Exception {
+        List<UserResponseDTO> users = Arrays.asList(new UserResponseDTO());
+        Page<UserResponseDTO> page = new PageImpl<>(users);
+        when(service.findAll(any(Pageable.class))).thenReturn(page);
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(BASE_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        MockHttpServletResponse resposta = result.getResponse();
+        assertEquals(HttpStatus.OK.value(), resposta.getStatus());
+    }
+
+    @Test
+    void create() throws Exception {
+        UserRequestDTO request = getUserRequestDTO();
+        String input = TestUtils.mapToJson(request);
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(BASE_URL + "/create")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
+
+    @Test
+    void findById() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void delete() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.delete(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
     void update() throws Exception {
-        StayRequestDTO request = getStayRequestDTO();
+        UserRequestDTO request = getUserRequestDTO();
         String input = TestUtils.mapToJson(request);
 
         MvcResult result = mvc
@@ -79,73 +136,10 @@ public class StayControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @Test
-    void findAll() throws Exception {
-        List<StayResponseDTO> stays = Arrays.asList(new StayResponseDTO());
-        Page<StayResponseDTO> page = new PageImpl<>(stays);
-        when(service.findAll(any(Pageable.class))).thenReturn(page);
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(BASE_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        MockHttpServletResponse resposta = result.getResponse();
-        assertEquals(HttpStatus.OK.value(), resposta.getStatus());
-    }
-
-    @Test
-    void findById() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(ID_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        MockHttpServletResponse response = result.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    @Test
-    void bind() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(ID_URL_BIND)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-    }
-    @Test
-    void exit() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(ID_URL_EXIT)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-    }
-
-    @Test
-    void shipStaysBy() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(ID_URL_SHIP_STAYS)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        MockHttpServletResponse response = result.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    private StayRequestDTO getStayRequestDTO() {
-        ShipResumeRequestStay ship = new ShipResumeRequestStay();
-        ship.setWeight(1.0);
-        return StayRequestDTO.builder()
-                .ship(ship)
-                .finalPrice(BigDecimal.valueOf(1.0))
-                .build();
+    private UserRequestDTO getUserRequestDTO() {
+        UserRequestDTO userRequestDTO = new UserRequestDTO();
+        userRequestDTO.setPassword("test");
+        userRequestDTO.setEmail("test1");
+        return userRequestDTO;
     }
 }
