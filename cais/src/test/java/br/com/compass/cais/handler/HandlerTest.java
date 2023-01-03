@@ -1,4 +1,4 @@
-package br.com.compass.cais;
+package br.com.compass.cais.handler;
 
 import br.com.compass.cais.exceptions.handlers.RestExceptionHandler;
 import br.com.compass.cais.exceptions.response.*;
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.ServletRequestBindingException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
