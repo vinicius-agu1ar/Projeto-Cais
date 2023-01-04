@@ -134,7 +134,7 @@ class CompanyServiceTest {
         Mockito.when(repository.save(any())).thenReturn(company);
         Mockito.when(assembler.toModel(any())).thenReturn(response);
 
-        CompanyResponseDTO companyResponseDTO = service.update(ID,request);
+        CompanyResponseDTO companyResponseDTO = service.update(ID, request);
         assertEquals(response, companyResponseDTO);
         verify(repository).save(any());
     }
@@ -221,14 +221,14 @@ class CompanyServiceTest {
     }
 
     @Test
-        void shouldVerifyCompanyResponseDTO_findAll() {
+    void shouldVerifyCompanyResponseDTO_findAll() {
         Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
         List<CompanyResponseDTO> companiesResponseDTOS = Arrays.asList(new CompanyResponseDTO());
 
         Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
         Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companiesResponseDTOS);
 
-        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(null, pageable,null);
+        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(null, pageable, null);
 
         Assertions.assertEquals(all, companiesResponseDTOS);
     }
@@ -243,7 +243,7 @@ class CompanyServiceTest {
         Mockito.when(repository.findByOrigin(any(), any())).thenReturn(companiesPage);
         Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companiesResponseDTOS);
 
-        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(company.getOrigin(), pageable,null);
+        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(company.getOrigin(), pageable, null);
 
         Assertions.assertEquals(all, companiesResponseDTOS);
     }
@@ -258,7 +258,7 @@ class CompanyServiceTest {
         Mockito.when(repository.findByName(any())).thenReturn(company);
         Mockito.when(assembler.toModel(company)).thenReturn(response);
 
-        List<CompanyResponseDTO> companyResponseDTO = service.verifyCompanyResponseDTO(company.getOrigin(), pageable,company.getName());
+        List<CompanyResponseDTO> companyResponseDTO = service.verifyCompanyResponseDTO(company.getOrigin(), pageable, company.getName());
 
         Assertions.assertEquals(companyResponseDTO.get(0), response);
     }
