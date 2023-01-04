@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: API Cais
   description: Projeto de API para gerenciamento de um cais.
-  version: 0.0.1
+  version: 0.1.1
   termsOfService: https://github.com/vinicius-agu1ar/Projeto-Cais/blob/dev/README.md
   contact:
     name: Lucas, Nalbert e Vinicius
@@ -350,7 +350,7 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
     put:
       summary: Atualizar Company por id
-      description: "Através desse endpoint você poderá atualizar uma Company. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      description: "Através desse endpoint você poderá atualizar uma Company. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
         - Company
       requestBody:
@@ -386,7 +386,7 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
     delete:
       summary: Excluir Company por id
-      description: "Através desse endpoint você poderá excluir uma Company. Se o ID infromado não existir, retornará 404."
+      description: "Através desse endpoint você poderá excluir uma Company. Se o ID informado não existir, retornará 404."
       tags:
         - Company
       responses:
@@ -595,7 +595,7 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
     put:
       summary: Atualizar Ship por id
-      description: "Através desse endpoint você poderá atualizar um Ship. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      description: "Através desse endpoint você poderá atualizar um Ship. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
         - Ship
       requestBody:
@@ -631,7 +631,7 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
     delete:
       summary: Excluir Ship por id
-      description: "Através desse endpoint você poderá excluir um Ship. Se o ID infromado não existir, retornará 404."
+      description: "Através desse endpoint você poderá excluir um Ship. Se o ID informado não existir, retornará 404."
       tags:
         - Ship
       responses:
@@ -700,7 +700,7 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
     put:
       summary: Atualizar Stay por id
-      description: "Através desse endpoint você poderá atualizar uma Stay. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID infromado não existir, retornará 404."
+      description: "Através desse endpoint você poderá atualizar uma Stay. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
         - Stay
       requestBody:
@@ -831,6 +831,153 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StayNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/user:
+    get:
+      tags:
+        - User
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      summary: Lista todos Users
+      description: "Através desse endpoint você poderá listar todos os Users. Existe filtros para o retorno da requisição, utilizando os Params."
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDTO'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    post:
+      summary: Cadastra um novo User
+      description: "Através desse endpoint você poderá cadastrar novos Users. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestDTO'
+      responses:
+        201:
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDTO'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {
+                "code": "ENTITY_IS_IN_USE",
+                "message": "Entity is in use, please check before performing this action again",
+                "mensagem": "A entidade está em uso, verifique antes de executar esta ação novamente",
+                "details": [
+                  "ENTITY_IS_IN_USE"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/user/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Buscar User por id
+      description: "Através desse endpoint você poderá consultar User por id. Se não existir, retornará 404."
+      tags:
+        - User
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDTO'
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    put:
+      summary: Atualizar User por id
+      description: "Através desse endpoint você poderá atualizar um User. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDTO'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserNotFound'
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Requisição Inválida",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+    delete:
+      summary: Excluir User por id
+      description: "Através desse endpoint você poderá excluir um User. Se o ID informado não existir, retornará 404."
+      tags:
+        - User
+      responses:
+        204:
+          description: "No Content"
+        400:
+          description: Bad Request
+
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserNotFound'
         5XX:
           description: "Erro no servidor, tente mais tarde!"
 components:
@@ -1176,6 +1323,44 @@ components:
           items:
             type: string
             example: PIER_NOT_FOUND
+    UserRequestDTO:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'example@compass.com.br'
+        password:
+          type: string
+          example: ALiCzsZUi_x5NX-kvH30NKrI5Buygxx9FA
+    UserResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: 'example@compass.com.br'
+    UserNotFound:
+      type: object
+      properties:
+        code:
+          type: string
+          example: USER_NOT_FOUND
+        message:
+          type: string
+          example: User not found, check before making this request again
+        mensagem:
+          type: string
+          example: Usuário não encontrado, verifique antes de fazer esta solicitação novamente
+        details:
+          type: array
+          items:
+            type: string
+            example: USER_NOT_FOUND
     Pageable:
       type: object
       properties:
