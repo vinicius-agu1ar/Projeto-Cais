@@ -75,7 +75,9 @@ public class UserService {
     public UserResponseDTO update(Long id, UserRequestDTO request) {
         log.info("Chamando método update - Service User");
         User user = fetchOrFail(id);
+        String encode = encoder.encode(request.getPassword());
         disassembler.copyToDomainObject(request,user);
+        user.setPassword(encode);
         user = create(user);
         return assembler.toModel(user);
     }
