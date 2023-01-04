@@ -24,7 +24,8 @@ public enum ErrorCode {
     SHIP_OPEN_IN_STAY("Open ship in stay, the ship cannot have open status in a stay"),
     STAY_IS_ALREADY_CLOSED("The stay is already closed, you cannot close a stay that has already been closed"),
     TOKEN_INVALID("The token is invalid or expired"),
-    GENERATE_TOKEN_ERROR("Error generating JWT token");
+    GENERATE_TOKEN_ERROR("Error generating JWT token"),
+    TOKEN_EXPIRED_INVALID("Expired or Invalid Token");
 
 
 

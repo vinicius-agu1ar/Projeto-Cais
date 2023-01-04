@@ -25,7 +25,8 @@ public enum CodeErro {
     NAVIO_ABERTO_EM_ESTADIA("Navio aberto em estadia, o navio não pode ter o status aberto em uma estadia"),
     ESTADIA_JA_ESTA_FECHADA("A Estadia já está fechada, não pode fechar uma Estadia que já foi fechada"),
     TOKEN_INVALIDO("O token está inválido ou foi expirado"),
-    ERROR_AO_GERAR_TOKEN("Erro ao gerar token JWT");
+    ERROR_AO_GERAR_TOKEN("Erro ao gerar token JWT"),
+    TOKEN_INVALIDO_EXPIRADO("Token Expirado ou Invalido");
 
     private final String menssagem;
 }
