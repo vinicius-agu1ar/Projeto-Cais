@@ -167,4 +167,56 @@ projeto foram:
 
 <h3>Ship</h3>
 
+<h4>Listar</h4>
+<p> Possui Filtros, parginação e outras funcionalidades que o Pageable trás 
+
+![Captura de Tela (225)](https://user-images.githubusercontent.com/81782608/210591954-992e8275-cc79-4e94-b0de-b5bff10ec2b7.png)
+
+<h4>Buscar</h4>
+
+![Captura de Tela (226)](https://user-images.githubusercontent.com/81782608/210592121-6345e5c2-a1d8-4f00-9aa7-cfdb767f3b93.png)
+
+<h4>Criar</h4>
+<p> O novo Ship vem com Company e Pier Null, na regra de negócio o Ship será vinculado com o a Company que ele pertece e com  o Pier que ele irá atracar 
+
+![Captura de Tela (227)](https://user-images.githubusercontent.com/81782608/210592254-ddbfed87-24eb-428c-99d4-04036df6ffa8.png)
+
+<h4>Atualizar</h4>
+<p> Com verificações
+
+![Captura de Tela (229)](https://user-images.githubusercontent.com/81782608/210592815-354683c6-da65-4d08-924b-1f4a9441d179.png)
+
+<h4>Excluir</h4>
+
+![Captura de Tela (230)](https://user-images.githubusercontent.com/81782608/210593056-2d9395f7-1371-4bf2-9054-63430df8e1ec.png)
+
+<h3>Stay</h3>
+
+<h4>Listar</h4>
+
+![Captura de Tela (231)](https://user-images.githubusercontent.com/81782608/210594370-b189fafe-2bf9-4953-b8c0-09ed5a57beed.png)
+
+<h4>Buscar</h4>
+
+![Captura de Tela (232)](https://user-images.githubusercontent.com/81782608/210594452-16fbcccb-bcc9-43a8-9ff6-ac40f14c38ca.png)
+
+<h4>Atualizar</h4>
+<p> Altera apenas o finalPrice
+
+![Captura de Tela (236)](https://user-images.githubusercontent.com/81782608/210598971-1b3cc3ca-ed9e-4257-814c-797995c0e94c.png)
+
+<h4>Entrada</h4>
+<p> Automaticamente será criado uma nova stay, o finalPrice e a saída ficam como null, só pode criar uma stay com o mesmo ship se ele não tiver uma stay ou sua stay estiver com status close
+
+![Captura de Tela (237)](https://user-images.githubusercontent.com/81782608/210599097-f704eb70-84b0-40ed-aaa4-994be418ea75.png)
+
+<h4>Saída</h4>
+<p> Automaticamente será calculado o finalPrice e a mudança de status para close
+
+![Captura de Tela (233)](https://user-images.githubusercontent.com/81782608/210595616-5fd9ba54-1ada-4c0c-aeab-58e9d993d942.png)
+
+<h4>Listar Stays de um determinado Ship</h4>
+
+![Captura de Tela (240)](https://user-images.githubusercontent.com/81782608/210600042-b19ac40b-d92a-4941-81fc-84d8517ad7fe.png)
+
 
