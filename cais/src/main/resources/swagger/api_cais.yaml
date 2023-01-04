@@ -1041,12 +1041,6 @@ components:
     StayRequestDTO:
       type: object
       properties:
-        ship:
-          type: object
-          properties:
-            wheight:
-              type: number
-              example: 20023.36
         finalPrice:
           type: number
           example: 1998.69
