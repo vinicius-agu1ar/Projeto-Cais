@@ -66,7 +66,7 @@ projeto foram:
   
 <h2>Swagger</h2> 
 
-<p> Foto indisponivel no momento a espera da finalização do swagger de User
+![Captura de Tela (241)](https://user-images.githubusercontent.com/81782608/210637068-7384241b-7a96-4326-ba81-1ffd545015e2.png)
   
 <h2>Postman - Requisições</h2> 
 
@@ -81,14 +81,23 @@ projeto foram:
   
 ![Captura de Tela (203)](https://user-images.githubusercontent.com/81782608/210438126-7f98c858-9230-461b-a7d8-23d460f78c80.png)
 
-<h4>Listar - User </h4>
+<h4>Listar</h4>
 
 ![Captura de Tela (204)](https://user-images.githubusercontent.com/81782608/210439924-83c4cf7c-81fd-4a22-b5a3-762eae40053a.png)
 
-<h4>Buscar - User </h4>
+<h4>Buscar</h4>
 <p> Possui verificações retornando status de erros referente a cada quebra das verificações, mais informações no swagger
   
 ![Captura de Tela (205)](https://user-images.githubusercontent.com/81782608/210440061-582bdfab-3db6-4891-befa-0661bfbe7340.png)
+
+<h4>Atualizar</h4>
+
+![Captura de Tela (242)](https://user-images.githubusercontent.com/81782608/210639558-26195283-5f40-4095-bd45-5f266a8fed83.png)
+
+<h4>Delete</h4>
+<p> Você pode excluir o seu usuário e automaticamente você será deslogado
+
+![Captura de Tela (243)](https://user-images.githubusercontent.com/81782608/210640287-058567ea-1e3f-4f2b-8db5-47a3f5a27a53.png)
 
 <h3>Company</h3>
 
