@@ -46,7 +46,6 @@ public class ShipService {
     }
 
     public Page<ShipResponseDTO> findAll(Pageable pageable) {
-
         Page<Ship> pageShip = repository.findAll(pageable);
         List<ShipResponseDTO> shipResponseDTOS = assembler.toCollectionModel(pageShip.getContent());
         return new PageImpl<>(shipResponseDTOS, pageable, pageShip.getTotalElements());
