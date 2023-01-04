@@ -14,8 +14,5 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class StayRequestDTO {
 
-    @NotNull
-    private ShipResumeRequestStay ship;
-
     private BigDecimal finalPrice;
 }
