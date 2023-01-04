@@ -1334,7 +1334,7 @@ components:
           example: 'example@compass.com.br'
         password:
           type: string
-          example: ALiCzsZUi_x5NX-kvH30NKrI5Buygxx9FA
+          example: 12345678
     UserResponseDTO:
       type: object
       properties:
