@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: API Cais
   description: Projeto de API para gerenciamento de um cais.
-  version: 0.1.1
+  version: 0.1.2
   termsOfService: https://github.com/vinicius-agu1ar/Projeto-Cais/blob/dev/README.md
   contact:
     name: Lucas, Nalbert e Vinicius
@@ -19,6 +19,8 @@ servers:
 paths:
   /api/pier:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: create
@@ -64,6 +66,8 @@ paths:
         '5XX':
           description: "INTERNAL SERVER ERROR"
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: findAll
@@ -89,6 +93,8 @@ paths:
           description: INTERNAL SERVER ERROR
   /api/pier/{id}:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: findById
@@ -119,6 +125,8 @@ paths:
         '5XX':
           description: "INTERNAL SERVER ERROR"
     put:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: update
@@ -164,6 +172,8 @@ paths:
         '5XX':
           description: "INTERNAL SERVER ERROR"
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: delete
@@ -201,6 +211,8 @@ paths:
           description: "INTERNAL SERVER ERROR"
   /api/pier/{id}/ship/{shipId}:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: bind
@@ -243,6 +255,8 @@ paths:
           description: "INTERNAL SERVER ERROR"
   /api/pier/ship/{shipId}:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - Pier
       operationId: unlink
@@ -268,6 +282,8 @@ paths:
           description: "INTERNAL SERVER ERROR"
   /api/company:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Company
       parameters:
@@ -292,6 +308,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     post:
+      security:
+        - bearerAuth: []
       summary: Cadastra uma nova Company
       description: "Através desse endpoint você poderá cadastrar novas Companies. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
       tags:
@@ -343,6 +361,8 @@ paths:
           type: integer
         required: true
     get:
+      security:
+        - bearerAuth: []
       summary: Lista as Companies por id
       description: "Através desse endpoint você poderá consultar Company por id. Se não existir, retornará 404."
       tags:
@@ -367,6 +387,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     put:
+      security:
+        - bearerAuth: []
       summary: Atualizar Company por id
       description: "Através desse endpoint você poderá atualizar uma Company. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
@@ -405,6 +427,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     delete:
+      security:
+        - bearerAuth: []
       summary: Excluir Company por id
       description: "Através desse endpoint você poderá excluir uma Company. Se o ID informado não existir, retornará 404."
       tags:
@@ -444,6 +468,8 @@ paths:
           type: integer
         required: true
     get:
+      security:
+        - bearerAuth: []
       summary: Lista todos os Ships de uma determinada Company
       description: "Através desse endpoint você poderá listar todos os navios de uma terminada company. EX: http://localhost:8080/api/company/1/ships"
       tags:
@@ -480,6 +506,8 @@ paths:
           type: integer
         required: true
     post:
+      security:
+        - bearerAuth: []
       summary: Vincular Company a um Ship
       description: "Através desse endpoint você irá vincular uma Company a um Ship. EX: http://localhost:8080/api/company/2/ship/7"
       tags:
@@ -510,8 +538,9 @@ paths:
         schema:
           type: integer
         required: true
-
     post:
+      security:
+        - bearerAuth: []
       summary: Desvincular Company a um Ship
       description: "Através desse endpoint você irá desvincular uma Company de um Ship. EX: http://localhost:8080/api/company/ship/7"
       tags:
@@ -531,6 +560,8 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
   /api/ship:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Ship
       parameters:
@@ -553,6 +584,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     post:
+      security:
+        - bearerAuth: []
       summary: Cadastra um novo Ship
       description: "Através desse endpoint você poderá cadastrar novos Ships. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
       tags:
@@ -604,6 +637,8 @@ paths:
           type: integer
         required: true
     get:
+      security:
+        - bearerAuth: []
       summary: Lista Ships por id
       description: "Através desse endpoint você poderá consultar Ship por id. Se não existir, retornará 404."
       tags:
@@ -628,6 +663,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     put:
+      security:
+        - bearerAuth: []
       summary: Atualizar Ship por id
       description: "Através desse endpoint você poderá atualizar um Ship. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
@@ -666,6 +703,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     delete:
+      security:
+        - bearerAuth: []
       summary: Excluir Ship por id
       description: "Através desse endpoint você poderá excluir um Ship. Se o ID informado não existir, retornará 404."
       tags:
@@ -687,6 +726,8 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
   /api/stay:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Stay
       parameters:
@@ -716,6 +757,8 @@ paths:
           type: integer
         required: true
     get:
+      security:
+        - bearerAuth: []
       summary: Buscar Stay por id
       description: "Através desse endpoint você poderá consultar Stay por id. Se não existir, retornará 404."
       tags:
@@ -740,6 +783,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     put:
+      security:
+        - bearerAuth: []
       summary: Atualizar Stay por id
       description: "Através desse endpoint você poderá atualizar uma Stay. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
@@ -785,6 +830,8 @@ paths:
           type: integer
         required: true
     post:
+      security:
+        - bearerAuth: []
       summary: Entrada de um Ship em uma Stay
       description: "Através desse endpoint você poderá cadastrar novas Stays. Ele será criado a partir de um vinculo entre um ship e uma stay"
       tags:
@@ -822,6 +869,8 @@ paths:
           type: integer
         required: true
     post:
+      security:
+        - bearerAuth: []
       summary: Saida de um Ship de uma Stay
       description: "Através desse endpoint será declarado a saída de um determinado Ship da Stay."
       tags:
@@ -859,6 +908,8 @@ paths:
           type: integer
         required: true
     get:
+      security:
+        - bearerAuth: []
       summary: Lista Stays de um Ship por id
       description: "Através desse endpoint você poderá listar todas as  Stays de um Ship pelo seu ID."
       tags:
@@ -884,6 +935,8 @@ paths:
           description: "Erro no servidor, tente mais tarde!"
   /api/user:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - User
       parameters:
@@ -955,6 +1008,8 @@ paths:
           type: integer
         required: true
     get:
+      security:
+        - bearerAuth: []
       summary: Buscar User por id
       description: "Através desse endpoint você poderá consultar User por id. Se não existir, retornará 404."
       tags:
@@ -979,6 +1034,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     put:
+      security:
+        - bearerAuth: []
       summary: Atualizar User por id
       description: "Através desse endpoint você poderá atualizar um User. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o ID informado não existir, retornará 404."
       tags:
@@ -1017,6 +1074,8 @@ paths:
         5XX:
           description: "Erro no servidor, tente mais tarde!"
     delete:
+      security:
+        - bearerAuth: []
       summary: Excluir User por id
       description: "Através desse endpoint você poderá excluir um User. Se o ID informado não existir, retornará 404."
       tags:
@@ -1429,3 +1488,8 @@ components:
               - idDesc
               - nameAsc
               - nameDesc
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
