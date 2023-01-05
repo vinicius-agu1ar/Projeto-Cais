@@ -2,6 +2,7 @@ package br.com.compass.cais.services;
 
 import br.com.compass.cais.entites.Company;
 import br.com.compass.cais.entites.Ship;
+import br.com.compass.cais.enums.Origin;
 import br.com.compass.cais.exceptions.response.CompanyAlreadySelectedException;
 import br.com.compass.cais.exceptions.response.CompanyNotFoundException;
 import br.com.compass.cais.exceptions.response.EntityInUseException;
@@ -30,8 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -77,6 +77,14 @@ class CompanyServiceTest {
         Assertions.assertEquals(response.getName(), companyResponseDTO.getName());
         Assertions.assertEquals(response, companyResponseDTO);
     }
+
+    @Test
+    void shouldFindCompanyById_NotFound() {
+        Mockito.when(repository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(CompanyNotFoundException.class, () -> service.findBy(ID));
+    }
+
 
     @Test
     void shouldFindAllShipsInCompanies_success() {
@@ -126,7 +134,7 @@ class CompanyServiceTest {
         Mockito.when(repository.save(any())).thenReturn(company);
         Mockito.when(assembler.toModel(any())).thenReturn(response);
 
-        CompanyResponseDTO companyResponseDTO = service.update(ID,request);
+        CompanyResponseDTO companyResponseDTO = service.update(ID, request);
         assertEquals(response, companyResponseDTO);
         verify(repository).save(any());
     }
@@ -163,6 +171,20 @@ class CompanyServiceTest {
     }
 
     @Test
+    void shouldFindCompanyByName_success() {
+        Company company = new Company();
+        CompanyResponseDTO response = new CompanyResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(company);
+        Mockito.when(assembler.toModel(company)).thenReturn(response);
+
+        CompanyResponseDTO companyResponseDTO = service.findByName(any());
+
+        Assertions.assertEquals(response.getName(), companyResponseDTO.getName());
+        Assertions.assertEquals(response, companyResponseDTO);
+    }
+
+    @Test
     void shouldBind_success() {
         Company company = new Company();
         Ship ship = new Ship();
@@ -196,5 +218,48 @@ class CompanyServiceTest {
         service.unlink(ship.getId());
 
         assertNull(ship.getCompany());
+    }
+
+    @Test
+    void shouldVerifyCompanyResponseDTO_findAll() {
+        Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
+        List<CompanyResponseDTO> companiesResponseDTOS = Arrays.asList(new CompanyResponseDTO());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
+        Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companiesResponseDTOS);
+
+        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(null, pageable, null);
+
+        Assertions.assertEquals(all, companiesResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyCompanyResponseDTO_findByOrigin() {
+        Page<Company> companiesPage = new PageImpl<>(List.of(new Company()));
+        List<CompanyResponseDTO> companiesResponseDTOS = Arrays.asList(new CompanyResponseDTO());
+        Company company = new Company();
+        company.setOrigin(Origin.NATIONAL);
+
+        Mockito.when(repository.findByOrigin(any(), any())).thenReturn(companiesPage);
+        Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(companiesResponseDTOS);
+
+        List<CompanyResponseDTO> all = service.verifyCompanyResponseDTO(company.getOrigin(), pageable, null);
+
+        Assertions.assertEquals(all, companiesResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyCompanyResponseDTO_findByName() {
+        Company company = new Company();
+        company.setOrigin(Origin.NATIONAL);
+        company.setName("name");
+        CompanyResponseDTO response = new CompanyResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(company);
+        Mockito.when(assembler.toModel(company)).thenReturn(response);
+
+        List<CompanyResponseDTO> companyResponseDTO = service.verifyCompanyResponseDTO(company.getOrigin(), pageable, company.getName());
+
+        Assertions.assertEquals(companyResponseDTO.get(0), response);
     }
 }

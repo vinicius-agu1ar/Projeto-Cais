@@ -7,3 +7,9 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: false
+
+#JWT
+cais:
+  jwt:
+    expiration: '86400000'
+    secret: ${JWT_SECRET:12345678}

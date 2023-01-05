@@ -37,7 +37,7 @@ projeto foram:
 
 <h3>AuthController</h3>
 <p>Controller criado para fazer login de usuários, gerando token a partir do seu service <strong>TokenService</strong> e autenticação com o <strong>AuthenticationManager</strong>
-  
+
 ![Captura de Tela (194)](https://user-images.githubusercontent.com/81782608/210434625-74853d0e-4ff1-41b6-8eff-10965f32b41a.png)
 
 <h3>CompanyController</h3>
@@ -63,12 +63,12 @@ projeto foram:
 <h2>Testes</h2>
 
 ![Captura de Tela (245)](https://user-images.githubusercontent.com/81782608/210653151-a9b1818d-adf5-42dd-beea-be1d00cb014b.png)
-  
-<h2>Swagger</h2> 
+
+<h2>Swagger</h2>
 
 ![Captura de Tela (241)](https://user-images.githubusercontent.com/81782608/210637068-7384241b-7a96-4326-ba81-1ffd545015e2.png)
-  
-<h2>Postman - Requisições</h2> 
+
+<h2>Postman - Requisições</h2>
 
 <h3>User</h3>
 
@@ -78,7 +78,7 @@ projeto foram:
 
 <h4>Login</h4>
 <p> O Login será devolvido o Token, esse token dará acesso aos demais endpoints da aplicação, token tem validade de 24 horas
-  
+
 ![Captura de Tela (203)](https://user-images.githubusercontent.com/81782608/210438126-7f98c858-9230-461b-a7d8-23d460f78c80.png)
 
 <h4>Listar</h4>
@@ -87,7 +87,7 @@ projeto foram:
 
 <h4>Buscar</h4>
 <p> Possui verificações retornando status de erros referente a cada quebra das verificações, mais informações no swagger
-  
+
 ![Captura de Tela (205)](https://user-images.githubusercontent.com/81782608/210440061-582bdfab-3db6-4891-befa-0661bfbe7340.png)
 
 <h4>Atualizar</h4>
@@ -103,7 +103,7 @@ projeto foram:
 
 <h4>Listar </h4>
 <p> Possui Filtros, podendo assim filtrar por Origin, Name, fazer parginação e outras funcionalidades que o Pageable trás 
-  
+
 ![Captura de Tela (207)](https://user-images.githubusercontent.com/81782608/210441540-2cd726f4-5f50-43e0-8597-38c352a08ae4.png)
 
 <h4>Listar todos os Ship de uma determinada Company</h4>
@@ -142,7 +142,7 @@ projeto foram:
 
 <h4>Listar </h4>
 <p> Possui Filtros, parginação e outras funcionalidades que o Pageable trás 
-  
+
 ![Captura de Tela (217)](https://user-images.githubusercontent.com/81782608/210444504-69e6f1dd-0f24-468c-9aef-cadd02418cd3.png)
 
 <h4>Buscar por Id</h4>
@@ -159,7 +159,7 @@ projeto foram:
 
 <h4>Delete </h4>
 <p> Camada de verificação, não é possível excluir um Pier que um Ship está usando, mais detalhes de verificação no swagger
-  
+
 ![Captura de Tela (221)](https://user-images.githubusercontent.com/81782608/210445316-8fcb571f-0260-4231-9b44-535a8bd9a9e0.png)
 
 <h4>Atualizar</h4>
@@ -227,5 +227,3 @@ projeto foram:
 <h4>Listar Stays de um determinado Ship</h4>
 
 ![Captura de Tela (240)](https://user-images.githubusercontent.com/81782608/210600042-b19ac40b-d92a-4941-81fc-84d8517ad7fe.png)
-
-

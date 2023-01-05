@@ -5,13 +5,13 @@ import java.util.List;
 
 import br.com.compass.cais.enums.CodeErro;
 import br.com.compass.cais.enums.ErrorCode;
-import br.com.compass.cais.exceptions.response.CompanyInUseException;
 import br.com.compass.cais.exceptions.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -90,23 +90,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntityInUseException.class)
-    public final ResponseEntity<Object> handleEntityInUseException(Exception ex){
+    public final ResponseEntity<Object> handleEntityInUseException(Exception ex) {
         log.error(ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.ENTITY_IS_IN_USE, CodeErro.ENTIDADE_EM_USO, ex);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
-    }
-
-    @ExceptionHandler(PierInUseException.class)
-    public final ResponseEntity<Object> handlePierInUseException(PierInUseException ex){
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.PIER_IS_IN_USE, CodeErro.CAIS_ESTA_EM_USO, ex);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
-    }
-
-    @ExceptionHandler(CompanyInUseException.class)
-    public final ResponseEntity<Object> handleCompanyInUseException(CompanyInUseException ex){
-        log.error(ex.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.COMPANY_IS_IN_USE, CodeErro.EMPRESA_EM_USO, ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
     }
 
@@ -124,10 +110,52 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
+    @ExceptionHandler(ShipNotCompatibleException.class)
+    public final ResponseEntity<Object> handleEntityNotCompatibleException(ShipNotCompatibleException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_NOT_COMPATIBLE, CodeErro.NAVIO_NAO_COMPATIVEL, ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(ShipOpenInStayException.class)
+    public final ResponseEntity<Object> handleShipOpenInStayException(ShipOpenInStayException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.SHIP_OPEN_IN_STAY, CodeErro.NAVIO_ABERTO_EM_ESTADIA, ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(StayNotFoundException.class)
+    public final ResponseEntity<Object> handleStayNotFoundException(StayNotFoundException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.STAY_NOT_FOUND, CodeErro.ESTADIA_NAO_ENCONTRADA, ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(StayCloseException.class)
+    public final ResponseEntity<Object> handleStayCloseException(StayCloseException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.STAY_IS_ALREADY_CLOSED, CodeErro.ESTADIA_JA_ESTA_FECHADA, ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(TokenExpiredOrInvalidException.class)
+    public final ResponseEntity<Object> handleTokenExpiredOrInvalidException(TokenExpiredOrInvalidException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.TOKEN_EXPIRED_INVALID, CodeErro.TOKEN_INVALIDO_EXPIRADO, ex);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.INTERNAL_SERVER_ERROR, CodeErro.ERRO_INTERNO_SERVIDOR, ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+        log.error(ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ErrorCode.USER_NOT_FOUND, CodeErro.USUARIO_NAO_ENCONTRADO, ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 }

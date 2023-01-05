@@ -27,8 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -143,9 +142,11 @@ class PierServiceTest {
     }
 
     @Test
-    void shouldDeletePier_error() {
-        doThrow(new EmptyResultDataAccessException(21)).when(repository).deleteById(any());
-        Assertions.assertThrows(PierNotFoundException.class, () -> service.delete(ID));
+    void shouldFindByPier_PierNotFoundExceptionError() {
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(PierNotFoundException.class, () -> service.findBy(ID));
     }
 
     @Test
@@ -155,16 +156,63 @@ class PierServiceTest {
     }
 
     @Test
-    void shouldFindAllCompanies_success() {
-        Page<Pier> companiesPage = new PageImpl<>(List.of(new Pier()));
-        List<PierResponseDTO> pierResponseDTOs = Arrays.asList(new PierResponseDTO());
-        PageImpl<PierResponseDTO> pierResponseDTOPage = new PageImpl<>(pierResponseDTOs, pageable, companiesPage.getTotalElements());
+    void shouldDeletePier_errorEmptyResultDataAccessException() {
+        doThrow(new EmptyResultDataAccessException(1)).when(repository).deleteById(any());
+        Assertions.assertThrows(PierNotFoundException.class, () -> service.delete(ID));
+    }
 
-        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(companiesPage);
-        Mockito.when(assembler.toCollectionModel(companiesPage.getContent())).thenReturn(pierResponseDTOs);
+    @Test
+    void shouldFindAllPiers_success() {
+        Page<Pier> piersPage = new PageImpl<>(List.of(new Pier()));
+        List<PierResponseDTO> pierResponseDTOs = Arrays.asList(new PierResponseDTO());
+        PageImpl<PierResponseDTO> pierResponseDTOPage = new PageImpl<>(pierResponseDTOs, pageable, piersPage.getTotalElements());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(piersPage);
+        Mockito.when(assembler.toCollectionModel(piersPage.getContent())).thenReturn(pierResponseDTOs);
 
         Page<PierResponseDTO> all = service.findAll(pageable);
 
         Assertions.assertEquals(pierResponseDTOPage, all);
+    }
+
+    @Test
+    void shouldFindPierByName_success() {
+        Pier pier = new Pier();
+        PierResponseDTO response = new PierResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(pier);
+        Mockito.when(assembler.toModel(pier)).thenReturn(response);
+
+        PierResponseDTO pierResponseDTO = service.findByName(any());
+
+        Assertions.assertEquals(response.getName(), pierResponseDTO.getName());
+        Assertions.assertEquals(response, pierResponseDTO);
+    }
+
+    @Test
+    void shouldVerifyPierResponseDTO_withStatus(){
+        Page<Pier> pierPage = new PageImpl<>(List.of(new Pier()));
+        List<PierResponseDTO> pierResponseDTOS = Arrays.asList(new PierResponseDTO());
+
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(pierPage);
+        Mockito.when(assembler.toCollectionModel(pierPage.getContent())).thenReturn(pierResponseDTOS);
+
+        List<PierResponseDTO> all = service.verifyPierResponseDTO(pageable,null);
+
+        Assertions.assertEquals(all, pierResponseDTOS);
+    }
+
+    @Test
+    void shouldVerifyPierResponseDTO_findByName() {
+        Pier pier = new Pier();
+        pier.setName("name");
+        PierResponseDTO response = new PierResponseDTO();
+
+        Mockito.when(repository.findByName(any())).thenReturn(pier);
+        Mockito.when(assembler.toModel(pier)).thenReturn(response);
+
+        List<PierResponseDTO> pierResponseDTO = service.verifyPierResponseDTO(pageable, pier.getName());
+
+        Assertions.assertEquals(pierResponseDTO.get(0), response);
     }
 }

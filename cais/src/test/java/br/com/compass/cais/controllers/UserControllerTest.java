@@ -2,53 +2,60 @@ package br.com.compass.cais.controllers;
 
 import br.com.compass.cais.config.security.SecurityFilter;
 import br.com.compass.cais.config.security.service.TokenService;
-import br.com.compass.cais.controller.ShipController;
-import br.com.compass.cais.repository.ShipRepository;
-import br.com.compass.cais.services.ShipService;
-import br.com.compass.cais.services.assembler.ShipDTOAssembler;
-import br.com.compass.cais.services.assembler.ShipInputDisassembler;
-import br.com.compass.cais.services.dto.request.ShipRequestDTO;
-import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
+import br.com.compass.cais.controller.UserController;
+import br.com.compass.cais.entites.User;
+import br.com.compass.cais.repository.StayRepository;
+import br.com.compass.cais.repository.UserRepository;
+import br.com.compass.cais.services.StayService;
+import br.com.compass.cais.services.UserService;
+import br.com.compass.cais.services.assembler.StayDTOAssembler;
+import br.com.compass.cais.services.assembler.StayInputDisassembler;
+import br.com.compass.cais.services.assembler.UserDTOAssembler;
+import br.com.compass.cais.services.assembler.UserInputDisassembler;
+import br.com.compass.cais.services.dto.request.CompanyRequestDTO;
+import br.com.compass.cais.services.dto.request.PierRequestDTO;
+import br.com.compass.cais.services.dto.request.UserRequestDTO;
+import br.com.compass.cais.services.dto.response.company.CompanyResponseDTO;
+import br.com.compass.cais.services.dto.response.pier.PierResponseDTO;
+import br.com.compass.cais.services.dto.response.user.UserResponseDTO;
 import br.com.compass.cais.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@WebMvcTest(controllers = ShipController.class)
+@WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class ShipControllerTest {
+public class UserControllerTest {
 
-    public static final String BASE_URL = "/api/ship";
+    public static final String BASE_URL = "/api/user";
     public static final String ID_URL = BASE_URL + "/1";
-    public static final Long ID = 1L;
 
     @MockBean
-    private ShipRepository repository;
+    private UserRepository repository;
     @MockBean
-    private ShipService service;
+    private UserService service;
     @MockBean
-    private ShipDTOAssembler assembler;
+    private UserDTOAssembler assembler;
     @MockBean
-    private ShipInputDisassembler disassembler;
+    private UserInputDisassembler disassembler;
     @MockBean
     private TokenService tokenService;
     @MockBean
@@ -56,6 +63,48 @@ class ShipControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Test
+    void findAll() throws Exception {
+        List<UserResponseDTO> users = Arrays.asList(new UserResponseDTO());
+        Page<UserResponseDTO> page = new PageImpl<>(users);
+        when(service.findAll(any(Pageable.class))).thenReturn(page);
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(BASE_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        MockHttpServletResponse resposta = result.getResponse();
+        assertEquals(HttpStatus.OK.value(), resposta.getStatus());
+    }
+
+    @Test
+    void create() throws Exception {
+        UserRequestDTO request = getUserRequestDTO();
+        String input = TestUtils.mapToJson(request);
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.post(BASE_URL + "/create")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
+
+    @Test
+    void findById() throws Exception {
+        MvcResult result = mvc
+                .perform(MockMvcRequestBuilders.get(ID_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 
     @Test
     void delete() throws Exception {
@@ -71,25 +120,8 @@ class ShipControllerTest {
     }
 
     @Test
-    void create() throws Exception {
-        ShipRequestDTO request = getShipRequestDTO();
-        String input = TestUtils.mapToJson(request);
-
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.post(BASE_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(input)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-    }
-
-    @Test
     void update() throws Exception {
-        ShipRequestDTO request = getShipRequestDTO();
+        UserRequestDTO request = getUserRequestDTO();
         String input = TestUtils.mapToJson(request);
 
         MvcResult result = mvc
@@ -103,36 +135,11 @@ class ShipControllerTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @Test
-    void findAll() throws Exception {
-        List<ShipResponseDTO> ships = Arrays.asList(new ShipResponseDTO());
-        Page<ShipResponseDTO> page = new PageImpl<>(ships);
-        when(service.findAll(any(Pageable.class))).thenReturn(page);
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(BASE_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        MockHttpServletResponse resposta = result.getResponse();
-        assertEquals(HttpStatus.OK.value(), resposta.getStatus());
-    }
-    @Test
-    void findById() throws Exception {
-        MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(ID_URL)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
 
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    private ShipRequestDTO getShipRequestDTO() {
-        return ShipRequestDTO.builder()
-                .name("Test")
-                .weight(100.65)
-                .build();
+    private UserRequestDTO getUserRequestDTO() {
+        UserRequestDTO userRequestDTO = new UserRequestDTO();
+        userRequestDTO.setPassword("test");
+        userRequestDTO.setEmail("test1");
+        return userRequestDTO;
     }
 }
