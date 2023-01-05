@@ -958,6 +958,7 @@ paths:
           description: FORBIDDEN
         5XX:
           description: "Erro no servidor, tente mais tarde!"
+  /api/user/create:
     post:
       summary: Cadastra um novo User
       description: "Através desse endpoint você poderá cadastrar novos Users. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametrô estiver errado, retornará um 404"
@@ -1093,6 +1094,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserNotFound'
+        5XX:
+          description: "Erro no servidor, tente mais tarde!"
+  /api/login:
+    post:
+      summary: Faz login de um User
+      description: "Através desse endpoint você poderá fazer login de um User. Se algum campo obrigatório for violado, retornará 400 com uma mensagem informando o campo e o erro, se o parametro estiver errado, retornará um 404"
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestDTO'
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              example: "token: CvX2O_-9HpJ5S-5iRiDcGkCcYjK74g9xXw5uLbWeJqM.Qf2uTo5uToYcJnXoJiWhXzIwIiTlUqDbSsQfKi6iYcZlMiSiSbVnMlZnXyW12bJbEbPfWbLjIoIiWdZjYe.9JiN1IzUiJiOiCgBhJcLiQ1VkJiOiAxE0JyE"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: {
+                "code": "BAD_REQUEST",
+                "message": "Request invalid",
+                "details": [
+                  "name : não deve estar em branco"
+                ]
+              }
         5XX:
           description: "Erro no servidor, tente mais tarde!"
 components:
