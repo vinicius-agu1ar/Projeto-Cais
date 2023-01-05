@@ -227,4 +227,3 @@ projeto foram:
 <h4>Listar Stays de um determinado Ship</h4>
 
 ![Captura de Tela (240)](https://user-images.githubusercontent.com/81782608/210600042-b19ac40b-d92a-4941-81fc-84d8517ad7fe.png)
-
