@@ -1,6 +1,8 @@
 package br.com.compass.cais.services;
 
+import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
+import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.dto.response.stay.StayResponseDTO;
 import br.com.compass.cais.services.dto.response.stay.StayResumeResponseDTO;
@@ -13,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +56,11 @@ public class StayAssemblerTest {
     }
     private static Stay newStay(){
         Stay stay = new Stay();
+        stay.setId(1L);
+        stay.setShip(new Ship());
+        stay.setEntry(LocalDateTime.now().minusHours(2));
+        stay.setExitShip(LocalDateTime.now());
+        stay.setStatus(Status.CLOSE);
         stay.setFinalPrice(BigDecimal.valueOf(100.0));
         return stay;
     }

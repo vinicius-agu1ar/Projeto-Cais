@@ -1,5 +1,7 @@
 package br.com.compass.cais.services;
 
+import br.com.compass.cais.entites.Company;
+import br.com.compass.cais.entites.Pier;
 import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.services.assembler.ShipDTOAssembler;
 import br.com.compass.cais.services.dto.response.ship.ShipResponseDTO;
@@ -52,6 +54,9 @@ public class ShipAssemblerTest {
 
     private static Ship newShip(){
         Ship ship = new Ship();
+        ship.setId(1L);
+        ship.setPier(new Pier());
+        ship.setCompany(new Company());
         ship.setName("name");
         ship.setWeight(1000.0);
         return ship;
