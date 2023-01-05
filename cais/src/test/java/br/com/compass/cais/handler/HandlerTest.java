@@ -82,4 +82,10 @@ class HandlerTest {
         UserNotFoundException ex = new UserNotFoundException();
         assertEquals(HttpStatus.NOT_FOUND, handler.handleUserNotFoundException(ex).getStatusCode());
     }
+
+    @Test
+    void tokenExpiredOrInvalidExceptionTest() {
+        TokenExpiredOrInvalidException ex = new TokenExpiredOrInvalidException();
+        assertEquals(HttpStatus.FORBIDDEN, handler.handleTokenExpiredOrInvalidException(ex).getStatusCode());
+    }
 }
