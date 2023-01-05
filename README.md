@@ -62,7 +62,7 @@ projeto foram:
 
 <h2>Testes</h2>
 
-<p> Foto indisponivel no momento a espera da finalização dos testes
+![Captura de Tela (245)](https://user-images.githubusercontent.com/81782608/210653151-a9b1818d-adf5-42dd-beea-be1d00cb014b.png)
   
 <h2>Swagger</h2> 
 
