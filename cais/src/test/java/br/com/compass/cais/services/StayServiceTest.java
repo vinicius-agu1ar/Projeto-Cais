@@ -6,6 +6,7 @@ import br.com.compass.cais.entites.Ship;
 import br.com.compass.cais.entites.Stay;
 import br.com.compass.cais.enums.Status;
 import br.com.compass.cais.exceptions.response.*;
+import br.com.compass.cais.repository.ShipRepository;
 import br.com.compass.cais.repository.StayRepository;
 import br.com.compass.cais.services.assembler.StayDTOAssembler;
 import br.com.compass.cais.services.assembler.StayInputDisassembler;
@@ -18,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -215,4 +218,27 @@ public class StayServiceTest {
 
         Assertions.assertEquals(all, stayResponseDTOS);
     }
+
+    @Test
+    void shouldVerifyShipOpenInStayException(){
+
+
+        List<Stay> stayList = Arrays.asList(new Stay());
+
+        Ship ship = new Ship();
+        ship.setId(1L);
+
+        Stay stay = new Stay();
+        stay.setShip(ship);
+        stay.setStatus(Status.OPEN);
+
+
+        Mockito.when(repository.findByShipIdAndStatus(1L,Status.OPEN)).thenReturn(stayList);
+        shipService.fetchOrFail(ship.getId());
+
+        Assertions.assertThrows( ShipOpenInStayException.class, () ->
+                service.bind(1L));
+
+    }
+
 }
